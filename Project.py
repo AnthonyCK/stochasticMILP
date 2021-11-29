@@ -122,7 +122,7 @@ svcTMean = {i.name: i.dur for i in patients}
 
 waitingPenalty = 2
 idlePenalty = 1
-overtimePenalty = 3
+overtimePenalty = 10
 
 def FirstStage():
     try:
@@ -148,6 +148,7 @@ def FirstStage():
     # Add constraints
         model.addConstrs((gp.quicksum(z[k,d] for d in D)==1 for k in K), name = "assign-1")
         model.addConstrs((gp.quicksum(y[i,k] for k in K)==1 for i in J), name = "assign-2")
+        model.addConstrs((y[i,k] <=x[k] for i in J for k in K), name = "assign-3")
         model.addConstrs((gp.quicksum(s[i,j,k] for j in N) == y[i,k] for k in K for i in J), name="tour1")
         model.addConstrs((gp.quicksum(s[i,j,k] for i in N) == y[j,k] for k in K for j in J), name="tour2")
         model.addConstrs((gp.quicksum(s[d,i,k] for i in J)==z[k,d]*x[k] for k in K for d in D), name = "samedepot1")
@@ -165,15 +166,16 @@ def FirstStage():
 
     # Optimize model
         model.optimize()
+        # model.computeIIS()
+        # model.write("model.lp")
+        # if model.status == GRB.INFEASIBLE:
+        #     vars = model.getVars()
+        #     ubpen = [1.0]*model.numVars
+        #     model.feasRelax(1, False, vars, None, ubpen, None, None)
+        #     model.optimize()
 
-    # # print optimal solutions
-    #     for v in model.getVars ():
-    #         print ('%s %g' % (v.varName , v.x))
-
-        
     ### Print results
     # Assignments
-        print("",file=f)
         for k in vehicles:
             if x[k.name].X < 0.5:
                 vehStr = "Vehicle {} is not used".format(k.name)
@@ -239,7 +241,6 @@ def SecondStage(u,s,x,w):
         model.optimize()
 
     # print optimal solutions
-        print("",file=f)
         for k in vehicles:
             if x[k.name] > 0.5:
                 vehStr = "\tOvertime: {}".format(O[k.name].x)
