@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import time
 from math import radians, cos, sin, asin, sqrt
-import Benders 
+import benders
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -325,7 +325,7 @@ class Sets:
         self.f = open("./Output/output{}.txt".format(name), "w")
 
 
-sets = Sets("(3-20)",10)
+sets = Sets("(4-30)",10)
 
 K = sets.K
 J = sets.J
@@ -342,7 +342,7 @@ start_time = time.time()
 # u,s,x = TSMILP()
 # printScen("Solving Second-Stage Model when scenario is realized")
 # SecondStage(u,s,x,1)
-m = Benders.Benders(para,sets)
+m = benders.MasterProblem(para,sets)
 m.optimize()
 end_time = time.time()
 printScen("time taken = "+str(end_time-start_time))

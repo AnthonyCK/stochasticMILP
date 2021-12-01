@@ -89,7 +89,7 @@ class Subproblem:
     def update_fixed_vars(self, MP):
         pass
 
-class Benders:
+class MasterProblem:
     def __init__(self, para, sets, max_iters=500, verbose=True, numscenarios=5, epsilon=0.001, delta=0.001):
         self.data = expando()
         self.variables = expando()
@@ -291,6 +291,9 @@ class Benders:
         O = {}
         I = {}
         W = {}
+        ot = []
+        it = []
+        wt = []
         for k in K:
             O[k] = sum(self.submodels[w].variables.O[k].x for w in scenarios)/len(scenarios)
             for i in N:
@@ -299,15 +302,23 @@ class Benders:
         for k in K:
             if self.variables.x[k].x > 0.5:
                 vehStr = "\tOvertime: {}".format(O[k])
+                ot.append(O[k])
                 for i in J:
                     if self.variables.y[i,k].x > 0.5:
                         vehStr += "\n\tPatient {}: Idletime = {}, Waitingtime = {}".format(i,I[i,k],W[i,k])
+                        it.append(I[i,k])
+                        wt.append(W[i,k])
                 for d in D:
                     if self.variables.z[k,d].x > 0.5:
                         vehStr += "\n\tDepot {}: Idletime = {}, Waitingtime = {}".format(d,I[d,k],W[d,k])
+                        it.append(I[i,k])
+                        wt.append(W[i,k])
                 print("Vehicle {}:\n {}".format(k, vehStr),file=f)
         # Optimality Gap
         print("",file=f)
-        print("Benders Iterations: {}\n".format(len(self.data.cutlist)), file=f)
-        print("Objective Value: {:.4f}\n".format(self.model.ObjVal), file=f)
+        print("Benders Iterations: {}".format(len(self.data.cutlist)), file=f)
+        print("Objective Value: {:.4f}".format(self.model.ObjVal), file=f)
+        print("Average Idle Time: {:.2f}".format(sum(it)/len(it)),file=f)
+        print("Average Waiting Time: {:.2f}".format(sum(wt)/len(wt)),file=f)
+        print("Average Over Time: {:.2f}".format(sum(ot)/len(ot)),file=f)
         print("Optimality Gap: {:.2%}".format((self.data.ub-self.data.lb)/self.data.lb), file=f)
