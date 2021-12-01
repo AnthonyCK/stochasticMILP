@@ -325,7 +325,7 @@ class Sets:
         self.f = open("output{}.txt".format(name), "w")
 
 
-sets = Sets("(3-10)",10)
+sets = Sets("(4-10)",10)
 
 K = sets.K
 J = sets.J
