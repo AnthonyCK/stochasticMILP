@@ -312,7 +312,7 @@ class Parameters:
 
 class Sets:
     def __init__(self,name,numscenario = 5):
-        file = "./data{}.xlsx".format(name)
+        file = "./Instances/data{}.xlsx".format(name)
         self.vehicle, self.patient, self.depot, self.node = LoadData(file)
         # sets
         self.K = [k.name for k in self.vehicle]
@@ -322,10 +322,10 @@ class Sets:
         # parameters
         self.scenario = range(numscenario)                                # scenarios
         self.p = [1/len(self.scenario) for i in self.scenario]           # probability
-        self.f = open("output{}.txt".format(name), "w")
+        self.f = open("./Output/output{}.txt".format(name), "w")
 
 
-sets = Sets("(5-10)",10)
+sets = Sets("(3-20)",10)
 
 K = sets.K
 J = sets.J
