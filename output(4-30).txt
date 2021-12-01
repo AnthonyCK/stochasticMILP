@@ -1,0 +1,248 @@
+
+************************************************
+Solving TSMILP Model using Benders Decomposition
+************************************************
+
+Vehicle 1 assigned to depot H2.
+Vehicle 2 is not used
+Vehicle 3 assigned to depot H2.
+Vehicle 4 is not used
+Vehicle 5 assigned to depot H1.
+Vehicle 6 is not used
+Vehicle 7 assigned to depot H4.
+Vehicle 8 is not used
+Vehicle 9 assigned to depot H1.
+Vehicle 10 assigned to depot H4.
+
+Vehicle 1's route: H2 -> 17 (dist=7.78, t=129.00, proc=44.70) -> 10 (dist=4.42, t=357.00, proc=54.15) -> 14 (dist=10.63, t=567.00, proc=34.65) -> 22 (dist=9.03, t=645.00, proc=44.33) -> 29 (dist=8.41, t=703.00, proc=100.86) -> H2 (dist=4.92)
+Vehicle 3's route: H2 -> 20 (dist=25.72, t=40.00, proc=61.87) -> 11 (dist=33.55, t=478.00, proc=38.15) -> 26 (dist=18.00, t=545.00, proc=44.93) -> 6 (dist=16.39, t=621.00, proc=49.97) -> 2 (dist=8.15, t=825.00, proc=51.27) -> H2 (dist=12.92)
+Vehicle 5's route: H1 -> 24 (dist=8.68, t=20.00, proc=29.25) -> 21 (dist=11.96, t=115.00, proc=40.05) -> 19 (dist=40.70, t=278.00, proc=69.81) -> 28 (dist=25.43, t=652.00, proc=51.23) -> 25 (dist=9.54, t=836.00, proc=33.16) -> H1 (dist=14.56)
+Vehicle 7's route: H4 -> 5 (dist=25.25, t=15.00, proc=40.27) -> 7 (dist=23.54, t=200.00, proc=47.01) -> 30 (dist=4.90, t=402.00, proc=50.95) -> 9 (dist=23.94, t=534.00, proc=73.35) -> 12 (dist=12.51, t=652.00, proc=79.10) -> H4 (dist=14.66)
+Vehicle 9's route: H1 -> 3 (dist=27.88, t=65.00, proc=55.14) -> 18 (dist=37.17, t=179.00, proc=57.33) -> 8 (dist=29.34, t=285.00, proc=52.60) -> 27 (dist=23.01, t=668.63, proc=44.25) -> 4 (dist=13.42, t=727.00, proc=97.48) -> H1 (dist=11.08)
+Vehicle 10's route: H4 -> 13 (dist=29.51, t=30.00, proc=30.77) -> 15 (dist=4.74, t=384.00, proc=40.77) -> 16 (dist=14.26, t=475.00, proc=50.75) -> 23 (dist=24.02, t=737.00, proc=49.47) -> 1 (dist=20.48, t=912.00, proc=37.18) -> H4 (dist=26.88)
+
+Vehicle 1:
+ 	Overtime: 168.9103096945364
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 257.5504778912435, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 32.03508970939238
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 12.300235747808074, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 0.0, Waitingtime = 0.0
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 158.66900332148407, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 0.0, Waitingtime = 0.0
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 0.0, Waitingtime = 0.0
+	Patient 20: Idletime = 0.0, Waitingtime = 0.0
+	Patient 21: Idletime = 0.0, Waitingtime = 0.0
+	Patient 22: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 0.0, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.0
+	Patient 26: Idletime = 0.0, Waitingtime = 0.0
+	Patient 27: Idletime = 48.10187613665253, Waitingtime = 12.270380477749587
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 0.0, Waitingtime = 0.0
+	Patient 30: Idletime = 0.0, Waitingtime = 0.0
+	Patient H1: Idletime = 0.0, Waitingtime = 0.0
+	Patient H2: Idletime = 0.0, Waitingtime = 0.0
+	Patient H3: Idletime = 49.140716470003554, Waitingtime = 0.0
+	Patient H4: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 3:
+ 	Overtime: 316.40661110750074
+	Patient 1: Idletime = 0.0, Waitingtime = 41.55429203410699
+	Patient 2: Idletime = 48.577976127792, Waitingtime = 32.99649244786688
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 97.55843518464776, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 0.0, Waitingtime = 0.0
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 0.0, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 0.0, Waitingtime = 0.0
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 127.26771748851957, Waitingtime = 0.0
+	Patient 20: Idletime = 0.0, Waitingtime = 0.0
+	Patient 21: Idletime = 0.0, Waitingtime = 0.0
+	Patient 22: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 0.0, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.0
+	Patient 26: Idletime = 0.0, Waitingtime = 0.0
+	Patient 27: Idletime = 0.0, Waitingtime = 0.0
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 30.2272591316932, Waitingtime = 7.561636097821338
+	Patient 30: Idletime = 0.0, Waitingtime = 0.0
+	Patient H1: Idletime = 0.0, Waitingtime = 0.0
+	Patient H2: Idletime = 288.337836025602, Waitingtime = 0.0
+	Patient H3: Idletime = 0.0, Waitingtime = 0.0
+	Patient H4: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 5:
+ 	Overtime: 53.939877952293635
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 47.16964686187116, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 23.013692977765004, Waitingtime = 10.71602811364196
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 0.0, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 0.0, Waitingtime = 0.0
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 0.0, Waitingtime = 0.0
+	Patient 20: Idletime = 0.0, Waitingtime = 0.0
+	Patient 21: Idletime = 233.71495120483695, Waitingtime = 7.558825212932925
+	Patient 22: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 0.0, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.0
+	Patient 26: Idletime = 48.1234652807489, Waitingtime = 13.960250763587329
+	Patient 27: Idletime = 0.0, Waitingtime = 0.0
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 0.0, Waitingtime = 0.0
+	Patient 30: Idletime = 56.869233405745625, Waitingtime = 0.0
+	Patient H1: Idletime = 0.0, Waitingtime = 0.0
+	Patient H2: Idletime = 6.89460976253531, Waitingtime = 0.0
+	Patient H3: Idletime = 0.0, Waitingtime = 0.0
+	Patient H4: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 7:
+ 	Overtime: 0.0
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 0.0, Waitingtime = 0.0
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 0.0, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 0.0, Waitingtime = 0.0
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 0.0, Waitingtime = 0.0
+	Patient 20: Idletime = 0.0, Waitingtime = 0.0
+	Patient 21: Idletime = 0.0, Waitingtime = 0.0
+	Patient 22: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 0.0, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.0
+	Patient 26: Idletime = 0.0, Waitingtime = 0.0
+	Patient 27: Idletime = 0.0, Waitingtime = 0.0
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 0.0, Waitingtime = 0.0
+	Patient 30: Idletime = 0.0, Waitingtime = 0.0
+	Patient H1: Idletime = 0.0, Waitingtime = 0.0
+	Patient H2: Idletime = 0.0, Waitingtime = 0.0
+	Patient H3: Idletime = 0.0, Waitingtime = 0.0
+	Patient H4: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 9:
+ 	Overtime: 0.0
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 0.0, Waitingtime = 0.0
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 0.0, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 0.0, Waitingtime = 0.0
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 0.0, Waitingtime = 0.0
+	Patient 20: Idletime = 0.0, Waitingtime = 0.0
+	Patient 21: Idletime = 0.0, Waitingtime = 0.0
+	Patient 22: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 0.0, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.0
+	Patient 26: Idletime = 0.0, Waitingtime = 0.0
+	Patient 27: Idletime = 0.0, Waitingtime = 0.0
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 0.0, Waitingtime = 0.0
+	Patient 30: Idletime = 0.0, Waitingtime = 0.0
+	Patient H1: Idletime = 0.0, Waitingtime = 0.0
+	Patient H2: Idletime = 0.0, Waitingtime = 0.0
+	Patient H3: Idletime = 0.0, Waitingtime = 0.0
+	Patient H4: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 10:
+ 	Overtime: 163.66256556944836
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 275.48014636351695, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 0.0, Waitingtime = 0.0
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 0.0, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 215.54251541834688, Waitingtime = 23.335023165639996
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 0.0, Waitingtime = 0.0
+	Patient 20: Idletime = 22.245350136289197, Waitingtime = 7.756247224745493
+	Patient 21: Idletime = 0.0, Waitingtime = 0.0
+	Patient 22: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 34.71942261045065, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.1848986223340944
+	Patient 26: Idletime = 0.0, Waitingtime = 0.0
+	Patient 27: Idletime = 0.0, Waitingtime = 0.0
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 0.0, Waitingtime = 0.0
+	Patient 30: Idletime = 0.0, Waitingtime = 0.0
+	Patient H1: Idletime = 0.0, Waitingtime = 0.0
+	Patient H2: Idletime = 0.0, Waitingtime = 0.0
+	Patient H3: Idletime = 0.0, Waitingtime = 0.0
+	Patient H4: Idletime = 0.0, Waitingtime = 0.0
+
+Benders Iterations: 500
+
+Optimality Gap: 1e-05
+
+*******************************
+time taken = 416.82869577407837
+*******************************
+
