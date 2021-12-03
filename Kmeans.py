@@ -4,23 +4,38 @@ import matplotlib.pyplot as plt
 import math
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-# suppress all warnings
-import warnings
-warnings.filterwarnings("ignore")
+from project import Sets, Parameters
+# # suppress all warnings
+# import warnings
+# warnings.filterwarnings("ignore")
 
-import os
-# print("Current Working Directory " , os.getcwd())
-os.chdir("/Users/zhuxiaoy/Desktop/MAE&IOE&Data Science/(3) 2021Fall/IOE 591 Special Topics on Transportation System Optimization/Project/Code")
+# import os
+# # print("Current Working Directory " , os.getcwd())
+# os.chdir("/Users/zhuxiaoy/Desktop/MAE&IOE&Data Science/(3) 2021Fall/IOE 591 Special Topics on Transportation System Optimization/Project/Code")
 
 # write a function to assign patients to depots using kmeans
-def assign_depots(depots, patients):
+class DecisionVar:
+    def __init__(self):
+        self.x = {}
+        self.y = {}
+        self.z = {}
+        self.u = {}
+        self.s = {}
+        self.O = {}
+        self.I = {}
+        self.W = {}
+
+decisionVar = DecisionVar()
+
+
+def assign_depots(depots, patients, max_iter = 1):
     # standardize data
-    D = StandardScaler().fit_transform(depots[['locX', 'locY']] )
-    standard_data = StandardScaler().fit_transform(patients[['X', 'Y']] )
+    D = StandardScaler().fit_transform(depots[['locX', 'locY']])
+    standard_data = StandardScaler().fit_transform(patients[['X', 'Y']])
     
     # let 5 depots to be our centroids
     centroids = D
-    kmeans = KMeans(n_clusters=5, init=centroids, max_iter=1) # just run one k-Means iteration so that the centroids are not updated
+    kmeans = KMeans(n_clusters=len(depots), init=centroids, max_iter=max_iter) # just run one k-Means iteration so that the centroids are not updated
 
     kmeans.fit(standard_data)
     return kmeans.labels_
@@ -200,11 +215,12 @@ def ouput_results(finalRoutes, vehicles):
         print("\n")
 
 # load in data
+file = './Instances/data(5-30).xlsx'
 # can change
-patients = pd.read_excel('data.xlsx', sheet_name = 'Patients')
-vehicles = pd.read_excel('data.xlsx', sheet_name = 'Vehicles')
+patients = pd.read_excel(file, sheet_name = 'Patients')
+vehicles = pd.read_excel(file, sheet_name = 'Vehicles')
 # fixed
-depots = pd.read_excel('data.xlsx', sheet_name = 'Depots')
+depots = pd.read_excel(file, sheet_name = 'Depots')
 
 # assign patients to depots 
 patients['depot'] = assign_depots(depots, patients)
@@ -215,7 +231,7 @@ newRoutes = calcul_travelDistCost(allRoutes)
 
 
 # scenario setting
-w = 4   # number of scenarios
+w = 10   # number of scenarios
 scenarios = range(w)
 p = [1/w for i in scenarios]    # probability of each scenario
 scen = {}

@@ -18,7 +18,6 @@ class Subproblem:
         self.update_fixed_vars(MP)
         self._build_model()
 
-        
     def optimize(self):
         self.model.optimize()
 
@@ -211,7 +210,6 @@ class MasterProblem:
         self.submodels = {w:Subproblem(self,scenario= w) for w in scenarios}
         [sm.optimize() for sm in self.submodels.values()]
 
-        # update bound
         self._update_bounds()
 
         while((self.data.ub > self.data.lb + self.data.delta 
@@ -244,7 +242,7 @@ class MasterProblem:
              for i in N for j in N for k in K}
         self.data.lambdas[cut] = sens_s
         sens_u = {j:sum(p[w] * self.submodels[w].constraints.fix_u[j].pi for w in scenarios) for j in J}
-        # Get subproblem objectives)
+        # Get subproblem objectives
         z_sub = sum(p[w] * self.submodels[w].model.ObjVal for w in scenarios)
         # Generate cut
         self.constraints.cuts[cut] = self.model.addConstr(

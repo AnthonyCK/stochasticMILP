@@ -5,6 +5,11 @@ import pandas as pd
 import time
 from math import radians, cos, sin, asin, sqrt
 import benders
+# import Kmeans
+
+####
+# MILP model and data instance generators
+####
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -22,149 +27,169 @@ def haversine(lon1, lat1, lon2, lat2):
     r = 6371 # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
     return c * r
 
-def TSMILP(para):
-    try:
-    # Create a new model
-        model = gp.Model ("TSMILP")
-
-    # Create variables
-        x = model.addVars(K, vtype = GRB.BINARY, name = "x")                # operate veh k
-        y = model.addVars(J, K, vtype = GRB.BINARY, name = "y")             # assign patient i to veh k
-        z = model.addVars(K, D, vtype = GRB.BINARY, name = "z")             # assign veh k to depot d
-        u = model.addVars(J, lb = 0.0, name = "u")                          # planned arrival time at i
-        s = model.addVars(N, N, K, vtype = GRB.BINARY, name = "s")          # assign arc (i,j) to veh k
-
-        O = model.addVars(K, scenarios, lb = 0.0, name = "O")                          # overtime of veh k
-        I = model.addVars(N, K, scenarios, lb = 0.0, name = "I")                       # idletime at patient i of veh k
-        W = model.addVars(N, K, scenarios, lb = 0.0, name = "W")                       # waitingtime at patient i of veh k
-        model.update()
-    # Set objective
-        objective = gp.quicksum(para.oprCost[i]*x[i] for i in K)\
-             + gp.quicksum(p[w]*(gp.quicksum(para.traCost[i,j]*para.travelT[i,j,w]*s[i,j,k] for i in N for j in N for k in K) + gp.quicksum(para.waitingPenalty*W[i,k,w] + para.idlePenalty*I[i,k,w] + para.overtimePenalty*O[k,w] for k in K for i in N)) for w in scenarios)
-        model.setObjective(objective, GRB.MINIMIZE)
-
-    # Add constraints
-        model.addConstrs((gp.quicksum(z[k,d] for d in D)==1 for k in K), name = "assign-1")
-        model.addConstrs((gp.quicksum(y[i,k] for k in K)==1 for i in J), name = "assign-2")
-        # model.addConstrs((y[i,k] <=x[k] for i in J for k in K), name = "assign-3")
-        model.addConstrs((gp.quicksum(s[i,j,k] for j in N) == y[i,k] for k in K for i in J), name="tour1")
-        model.addConstrs((gp.quicksum(s[i,j,k] for i in N) == y[j,k] for k in K for j in J), name="tour2")
-        model.addConstrs((gp.quicksum(s[d,i,k] for i in J)==z[k,d]*x[k] for k in K for d in D), name = "samedepot1")
-        model.addConstrs((gp.quicksum(s[i,d,k] for i in J)==z[k,d]*x[k] for k in K for d in D), name = "samedepot2")
-        model.addConstrs((gp.quicksum(y[i,k]*para.demand[i] for i in J)<=para.cap[k]*x[k] for k in K), name = "capacity")
-        model.addConstrs((para.tStart[i]<=u[i] for i in J), name = "timewindow-1")
-        model.addConstrs((u[i]<=para.tEnd[i] for i in J), name = "timewindow-2")
-        M = {(i,j) : 24*60 + para.svcTMean[i] + para.traTMean[i,j] for i in J for j in J}
-        model.addConstrs((u[j]>=u[i]+para.traTMean[i,j]+para.svcTMean[i]-M[i,j]*(1-gp.quicksum(s[i,j,k] for k in K)) for i in J for j in J), name = "planned_arri_time")
-
-        # M = 60*60
-        # model.addConstrs((W[j,k,w]<=travelT[i,j,w]+svcT[i,w]-u[j]+u[i]+W[i,k,w]+I[i,k,w] + M*(1-s[i,j,k]) for i in J for j in J for k in K for w in scenarios), name = "waitingtime-1")
-        # model.addConstrs((O[k,w]<=travelT[i,d,w]+svcT[i,w]-totOprT[k]+u[i]+W[i,k,w]+I[i,k,w] + M*(1-s[i,d,k]) for i in J for d in D for k in K for w in scenarios), name = "overtime1")
-        # model.addConstrs((W[i,k,w]<=travelT[d,i,w]-u[i]+I[d,k,w] + M*(1-s[d,i,k]) for i in J for d in D for k in K for w in scenarios), name = "waitingtime-2")
-        # model.addConstrs((W[j,k,w]>=travelT[i,j,w]+svcT[i,w]-u[j]+u[i]+W[i,k,w]+I[i,k,w] - M*(1-s[i,j,k]) for i in J for j in J for k in K for w in scenarios), name = "waitingtime-3")
-        # model.addConstrs((O[k,w]>=travelT[i,d,w]+svcT[i,w]-totOprT[k]+u[i]+W[i,k,w]+I[i,k,w] - M*(1-s[i,d,k]) for i in J for d in D for k in K for w in scenarios), name = "overtime2")
-        # model.addConstrs((W[i,k,w]>=travelT[d,i,w]-u[i]+I[d,k,w] - M*(1-s[d,i,k]) for i in J for d in D for k in K for w in scenarios), name = "waitingtime-4")
-
-        for i in J:
-            for k in K:
-                for w in scenarios:
-                    for j in J:
-                        model.addGenConstrIndicator(s[i,j,k],True,(W[j,k,w]==W[i,k,w]+I[i,k,w]+para.travelT[i,j,w]+para.svcT[i,w]-u[j]+u[i]), name = "waitingtime-1")
-                    for d in D:
-                        model.addGenConstrIndicator(s[i,d,k],True,(O[k,w]==W[i,k,w]+I[i,k,w]+para.travelT[i,d,w]+para.svcT[i,w]-para.totOprT[k]+u[i]), name = "overtime")
-                        model.addGenConstrIndicator(s[d,i,k],True,(W[i,k,w]==I[d,k,w]+para.travelT[d,i,w]-u[i]), name = "waitingtime-2")
-
-    # Optimize model
-        model.optimize()
-
-    ### Print results
-    # Assignments
-        for k in vehicles:
-            if x[k.name].X < 0.5:
-                vehStr = "Vehicle {} is not used".format(k.name)
-            else:
-                for d in D:
-                    if z[k.name,d].X > 0.5:
-                        k.depot = d
-                        vehStr = "Vehicle {} assigned to depot {}.".format(k.name,d)
-            print(vehStr, file=f)
-    # Routing
-        print("",file=f)
-        for k in vehicles:
-            if x[k.name].X > 0.5:
-                cur = k.depot
-                route = k.depot
-                while True:
-                    for i in patients:
-                        if s[cur,i.name,k.name].x > 0.5:
-                            route += " -> {} (dist={:.2f}, t={:.2f}, proc={:.2f})".format(i.name,para.dist[cur,i.name],u[i.name].x,i.dur)
-                            cur = i.name
-                    for j in D:
-                        if s[cur,j,k.name].x > 0.5:
-                            route += " -> {} (dist={:.2f})".format(j, para.dist[cur,j])
-                            cur = j
-                            break
-                    if cur == k.depot:
-                        break
-                print("Vehicle {}'s route: {}".format(k.name, route),file=f)
-
-        outputU = {i:u[i].x for i in J}
-        outputS = {(i,j,k):s[i,j,k].x for i in N for j in N for k in K}
-        outputX = {k:x[k].x for k in K}
-        return outputU, outputS, outputX
-
-    except gp.GurobiError as e:
-        print ('Error code' + str (e. errno ) + ': ' + str(e))
-        pass
-    except AttributeError :
-        print ('Encountered an attribute error')
-        pass
-
-def SecondStage(para,u,s,x,w):
-    try:
-    # Create a new model
-        model = gp.Model ("SSMILP")
-
-    # Create variables
-        O = model.addVars(K, lb = 0.0, name = "O")                       # overtime of veh k
-        I = model.addVars(N, K, lb = 0.0, name = "I")                    # idletime at patient i of veh k
-        W = model.addVars(N, K, lb = 0.0, name = "W")                    # waitingtime at patient i of veh k
-
-    # Set objective
-        objective = gp.quicksum(para.oprCost[i]*x[i] for i in K) \
-            + gp.quicksum(para.traCost[i,j]*para.travelT[i,j,w]*s[i,j,k] for i in N for j in N for k in K) \
-                + gp.quicksum(para.waitingPenalty*W[i,k] + para.idlePenalty*I[i,k] + para.overtimePenalty*O[k] for k in K for i in N)
-        model.setObjective(objective, GRB.MINIMIZE)
-
-    # Add constraints
-        M = 60*60
-        model.addConstrs((W[j,k]==para.travelT[i,j,w]+para.svcT[i,w]-u[j]+u[i]+W[i,k]+I[i,k] for i in J for j in J for k in K if s[i,j,k]==1), name = "waitingtime-1")
-        model.addConstrs((O[k]==para.travelT[i,d,w]+para.svcT[i,w]-para.totOprT[k]+u[i]+W[i,k]+I[i,k] for i in J for d in D for k in K if s[i,d,k]==1), name = "overtime")
-        model.addConstrs((W[i,k]==para.travelT[d,i,w]-u[i]+I[d,k] for i in J for d in D for k in K if s[d,i,k]==1), name = "waitingtime-2")
-
-    # Optimize model
-        model.optimize()
-
-    # print optimal solutions
-        for k in vehicles:
-            if x[k.name] > 0.5:
-                vehStr = "\tOvertime: {}".format(O[k.name].x)
-                for i in N:
-                    vehStr += "\n\tPatient {}: Idletime = {}, Waitingtime = {}".format(i,I[i,k.name].x,W[i,k.name].x)
-                print("Vehicle {}:\n {}".format(k.name, vehStr),file=f)
-
-        return model.objVal
-
-    except gp.GurobiError as e:
-        print ('Error code' + str (e. errno ) + ': ' + str(e))
-        pass
-    except AttributeError :
-        print ('Encountered an attribute error')
-        pass
-
-def printScen(scenStr):
+def printScen(scenStr,file):
     sLen = len(scenStr)
-    print("\n" + "*"*sLen + "\n" + scenStr + "\n" + "*"*sLen + "\n", file=f)
+    print("\n" + "*"*sLen + "\n" + scenStr + "\n" + "*"*sLen + "\n", file=file)
+
+class TSMILP:
+    def __init__(self,sets,para) -> None:
+        self.sets = sets
+        self.para = para
+        
+    def optimize(self):
+        '''
+        TSMILP model
+        '''
+        K = self.sets.K
+        J = self.sets.J
+        D = self.sets.D
+        N = self.sets.N
+        scenarios = self.sets.scenario
+        p = self.sets.p
+        f = self.sets.f
+        vehicles = self.sets.vehicle
+        patients = self.sets.patient
+        para = self.para
+        try:
+        # Create a new model
+            model = gp.Model ("TSMILP")
+
+        # Create variables
+            x = model.addVars(K, vtype = GRB.BINARY, name = "x")                # operate veh k
+            y = model.addVars(J, K, vtype = GRB.BINARY, name = "y")             # assign patient i to veh k
+            z = model.addVars(K, D, vtype = GRB.BINARY, name = "z")             # assign veh k to depot d
+            u = model.addVars(J, lb = 0.0, name = "u")                          # planned arrival time at i
+            s = model.addVars(N, N, K, vtype = GRB.BINARY, name = "s")          # assign arc (i,j) to veh k
+
+            O = model.addVars(K, scenarios, lb = 0.0, name = "O")                          # overtime of veh k
+            I = model.addVars(N, K, scenarios, lb = 0.0, name = "I")                       # idletime at patient i of veh k
+            W = model.addVars(N, K, scenarios, lb = 0.0, name = "W")                       # waitingtime at patient i of veh k
+            model.update()
+        # Set objective
+            objective = gp.quicksum(para.oprCost[i]*x[i] for i in K)\
+                + gp.quicksum(p[w]*(gp.quicksum(para.traCost[i,j]*para.travelT[i,j,w]*s[i,j,k] for i in N for j in N for k in K) + gp.quicksum(para.waitingPenalty*W[i,k,w] + para.idlePenalty*I[i,k,w] + para.overtimePenalty*O[k,w] for k in K for i in N)) for w in scenarios)
+            model.setObjective(objective, GRB.MINIMIZE)
+
+        # Add constraints
+            model.addConstrs((gp.quicksum(z[k,d] for d in D)==1 for k in K), name = "assign-1")
+            model.addConstrs((gp.quicksum(y[i,k] for k in K)==1 for i in J), name = "assign-2")
+            # model.addConstrs((y[i,k] <=x[k] for i in J for k in K), name = "assign-3")
+            model.addConstrs((gp.quicksum(s[i,j,k] for j in N) == y[i,k] for k in K for i in J), name="tour1")
+            model.addConstrs((gp.quicksum(s[i,j,k] for i in N) == y[j,k] for k in K for j in J), name="tour2")
+            model.addConstrs((gp.quicksum(s[d,i,k] for i in J)==z[k,d]*x[k] for k in K for d in D), name = "samedepot1")
+            model.addConstrs((gp.quicksum(s[i,d,k] for i in J)==z[k,d]*x[k] for k in K for d in D), name = "samedepot2")
+            model.addConstrs((gp.quicksum(y[i,k]*para.demand[i] for i in J)<=para.cap[k]*x[k] for k in K), name = "capacity")
+            model.addConstrs((para.tStart[i]<=u[i] for i in J), name = "timewindow-1")
+            model.addConstrs((u[i]<=para.tEnd[i] for i in J), name = "timewindow-2")
+            M = {(i,j) : 24*60 + para.svcTMean[i] + para.traTMean[i,j] for i in J for j in J}
+            model.addConstrs((u[j]>=u[i]+para.traTMean[i,j]+para.svcTMean[i]-M[i,j]*(1-gp.quicksum(s[i,j,k] for k in K)) for i in J for j in J), name = "planned_arri_time")
+
+            for i in J:
+                for k in K:
+                    for w in scenarios:
+                        for j in J:
+                            model.addGenConstrIndicator(s[i,j,k],True,(W[j,k,w]==W[i,k,w]+I[i,k,w]+para.travelT[i,j,w]+para.svcT[i,w]-u[j]+u[i]), name = "waitingtime-1")
+                        for d in D:
+                            model.addGenConstrIndicator(s[i,d,k],True,(O[k,w]==W[i,k,w]+I[i,k,w]+para.travelT[i,d,w]+para.svcT[i,w]-para.totOprT[k]+u[i]), name = "overtime")
+                            model.addGenConstrIndicator(s[d,i,k],True,(W[i,k,w]==I[d,k,w]+para.travelT[d,i,w]-u[i]), name = "waitingtime-2")
+
+        # Optimize model
+            model.optimize()
+
+        ### Print results
+        # Assignments
+            for k in vehicles:
+                if x[k.name].X < 0.5:
+                    vehStr = "Vehicle {} is not used".format(k.name)
+                else:
+                    for d in D:
+                        if z[k.name,d].X > 0.5:
+                            k.depot = d
+                            vehStr = "Vehicle {} assigned to depot {}.".format(k.name,d)
+                print(vehStr, file=f)
+        # Routing
+            print("",file=f)
+            for k in vehicles:
+                if x[k.name].X > 0.5:
+                    cur = k.depot
+                    route = k.depot
+                    while True:
+                        for i in patients:
+                            if s[cur,i.name,k.name].x > 0.5:
+                                route += " -> {} (dist={:.2f}, t={:.2f}, proc={:.2f})".format(i.name,para.dist[cur,i.name],u[i.name].x,i.dur)
+                                cur = i.name
+                        for j in D:
+                            if s[cur,j,k.name].x > 0.5:
+                                route += " -> {} (dist={:.2f})".format(j, para.dist[cur,j])
+                                cur = j
+                                break
+                        if cur == k.depot:
+                            break
+                    print("Vehicle {}'s route: {}".format(k.name, route),file=f)
+
+            outputU = {i:u[i].x for i in J}
+            outputS = {(i,j,k):s[i,j,k].x for i in N for j in N for k in K}
+            outputX = {k:x[k].x for k in K}
+            return outputU, outputS, outputX
+
+        except gp.GurobiError as e:
+            print ('Error code' + str (e. errno ) + ': ' + str(e))
+            pass
+        except AttributeError :
+            print ('Encountered an attribute error')
+            pass
+
+    def SecondStage(self,u,s,x,w):
+        '''
+        Second-stage model given a scenario realized
+        '''
+        K = self.sets.K
+        J = self.sets.J
+        D = self.sets.D
+        N = self.sets.N
+        f = self.sets.f
+        vehicles = self.sets.vehicle
+        para = self.para
+        try:
+        # Create a new model
+            model = gp.Model ("SSMILP")
+
+        # Create variables
+            O = model.addVars(K, lb = 0.0, name = "O")                       # overtime of veh k
+            I = model.addVars(N, K, lb = 0.0, name = "I")                    # idletime at patient i of veh k
+            W = model.addVars(N, K, lb = 0.0, name = "W")                    # waitingtime at patient i of veh k
+
+        # Set objective
+            objective = gp.quicksum(para.oprCost[i]*x[i] for i in K) \
+                + gp.quicksum(para.traCost[i,j]*para.travelT[i,j,w]*s[i,j,k] for i in N for j in N for k in K) \
+                    + gp.quicksum(para.waitingPenalty*W[i,k] + para.idlePenalty*I[i,k] + para.overtimePenalty*O[k] for k in K for i in N)
+            model.setObjective(objective, GRB.MINIMIZE)
+
+        # Add constraints
+            M = 60*60
+            model.addConstrs((W[j,k]==para.travelT[i,j,w]+para.svcT[i,w]-u[j]+u[i]+W[i,k]+I[i,k] for i in J for j in J for k in K if s[i,j,k]==1), name = "waitingtime-1")
+            model.addConstrs((O[k]==para.travelT[i,d,w]+para.svcT[i,w]-para.totOprT[k]+u[i]+W[i,k]+I[i,k] for i in J for d in D for k in K if s[i,d,k]==1), name = "overtime")
+            model.addConstrs((W[i,k]==para.travelT[d,i,w]-u[i]+I[d,k] for i in J for d in D for k in K if s[d,i,k]==1), name = "waitingtime-2")
+
+        # Optimize model
+            model.optimize()
+
+        # print optimal solutions
+            for k in vehicles:
+                if x[k.name] > 0.5:
+                    vehStr = "\tOvertime: {}".format(O[k.name].x)
+                    for i in N:
+                        vehStr += "\n\tPatient {}: Idletime = {}, Waitingtime = {}".format(i,I[i,k.name].x,W[i,k.name].x)
+                    print("Vehicle {}:\n {}".format(k.name, vehStr),file=f)
+
+            return model.objVal
+
+        except gp.GurobiError as e:
+            print ('Error code' + str (e. errno ) + ': ' + str(e))
+            pass
+        except AttributeError :
+            print ('Encountered an attribute error')
+            pass
 
 ### Helper Classes
 class Vehicle():
@@ -173,6 +198,7 @@ class Vehicle():
         self.cap = cap
         self.totOprTime = totOprTime
         self.oprCost = oprCost
+        self.depot
 
     def __str__(self):
         return f"Vehicle: {self.name}\n  Capacity: {self.cap}\n  Total Operation Time: {self.totOprTime}\n \
@@ -197,6 +223,7 @@ class Patient():
         self.tEnd = tEnd
         self.demand = demand
         self.dur = dur
+        self.depot
 
     def __str__(self):
         return f"Patient: {self.name}\n  Location: {self.locX, self.locY}\n  Demand: {self.dType.name}\n  Capacity: {self.dType.capacity}\n  Duration: {self.dur}\n  Start time: {self.tStart}\n  End time: {self.tEnd}"
@@ -218,41 +245,13 @@ class Node():
     def __str__(self):
         return f"Node: {self.name}\n Type: {self.type}\n Location: {self.loc}"
 
-
-# Read data
-def LoadData(file):
-    filename = file
-    ws = pd.read_excel(filename, sheet_name='Patients')
-    patients = []
-    for i, row in ws.iterrows():
-        this = Patient(*row)
-        patients.append(this)
-
-    ws = pd.read_excel(filename, sheet_name='Depots')
-    depots = []
-    for i,row in ws.iterrows():
-        this = Depot(*row)
-        depots.append(this)
-
-    ws = pd.read_excel(filename, sheet_name='Vehicles')
-    vehicles = []
-    for i,row in ws.iterrows():
-        this = Vehicle(*row)
-        vehicles.append(this)
-
-    nodes = []
-    for row in patients:
-        this = Node(row.name, 'Patient', row.loc)
-        nodes.append(this)
-    for row in depots:
-        this = Node(row.name, 'Depot', row.loc)
-        nodes.append(this)
-    
-    return vehicles, patients, depots, nodes
-
-
 class Parameters:
-    def __init__(self, vehicles, patients, depots, nodes):
+    def __init__(self, sets):
+        vehicles = sets.vehicle
+        patients = sets.patient
+        nodes = sets.node
+        scenarios = sets.scenario
+
         self.cap = {k.name: k.cap for k in vehicles}             # capacity
         self.totOprT = {k.name: k.totOprTime for k in vehicles}  # total operation time
         self.oprCost = {k.name: k.oprCost for k in vehicles}     # operation cost
@@ -305,15 +304,15 @@ class Parameters:
 
         self.svcTMean = {i.name: i.dur for i in patients}
 
-        self.waitingPenalty = 1
-        self.idlePenalty = 2
+        self.waitingPenalty = 2
+        self.idlePenalty = 1
         self.overtimePenalty = 10
         pass
 
 class Sets:
     def __init__(self,name,numscenario = 5):
         file = "./Instances/data{}.xlsx".format(name)
-        self.vehicle, self.patient, self.depot, self.node = LoadData(file)
+        self.vehicle, self.patient, self.depot, self.node = self.LoadData(file)
         # sets
         self.K = [k.name for k in self.vehicle]
         self.J = [j.name for j in self.patient]
@@ -324,27 +323,63 @@ class Sets:
         self.p = [1/len(self.scenario) for i in self.scenario]           # probability
         self.f = open("./Output/output{}.txt".format(name), "w")
 
+    def LoadData(self, file):
+        '''
+        Load Data
+        '''
+        filename = file
+        ws = pd.read_excel(filename, sheet_name='Patients')
+        patients = []
+        for i, row in ws.iterrows():
+            this = Patient(*row)
+            patients.append(this)
 
-sets = Sets("(4-30)",10)
+        ws = pd.read_excel(filename, sheet_name='Depots')
+        depots = []
+        for i,row in ws.iterrows():
+            this = Depot(*row)
+            depots.append(this)
 
-K = sets.K
-J = sets.J
-D = sets.D
-N = sets.N
-scenarios = sets.scenario
-p = sets.p
-f = sets.f
-vehicles = sets.vehicle
-patients = sets.patient
-para = Parameters(sets.vehicle, sets.patient, sets.depot, sets.node)
-printScen("Solving TSMILP Model using Benders Decomposition")
+        ws = pd.read_excel(filename, sheet_name='Vehicles')
+        vehicles = []
+        for i,row in ws.iterrows():
+            this = Vehicle(*row)
+            vehicles.append(this)
+
+        nodes = []
+        for row in patients:
+            this = Node(row.name, 'Patient', row.loc)
+            nodes.append(this)
+        for row in depots:
+            this = Node(row.name, 'Depot', row.loc)
+            nodes.append(this)
+        
+        return vehicles, patients, depots, nodes
+
+sets = Sets("(5-30)",10)
+para = Parameters(sets)
+
+printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
 start_time = time.time()
-# u,s,x = TSMILP()
-# printScen("Solving Second-Stage Model when scenario is realized")
-# SecondStage(u,s,x,1)
 m = benders.MasterProblem(para,sets)
 m.optimize()
 end_time = time.time()
-printScen("time taken = "+str(end_time-start_time))
+printScen("time taken = "+str(end_time-start_time),sets.f)
 
+# for i in range(3,6):
+#     for j in [10,20,30]:
+#         sets = Sets("({}-{})".format(i,j),10)
+#         para = Parameters(sets)
 
+#         printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
+#         start_time = time.time()
+#         m = benders.MasterProblem(para,sets)
+#         m.optimize()
+#         end_time = time.time()
+#         printScen("time taken = "+str(end_time-start_time),sets.f)
+
+# printScen("Solving TSMILP Model using K-means heuristic",sets.f)
+# start_time = time.time()
+# print(Kmeans.assign_depots(sets.depot,sets.patient))s
+# end_time = time.time()
+# printScen("time taken = "+str(end_time-start_time),sets.f)
