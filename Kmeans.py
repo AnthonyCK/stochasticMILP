@@ -5,6 +5,7 @@ import math
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+
 import Project as p
 # # suppress all warnings
 # import warnings
@@ -127,6 +128,7 @@ def assign_PatientDepotVehicle(max_iter=500):
                     decisionVar.s[veh_route_df.loc[ind-1,'name'], pa['name'], allVehicles[0]] = 1 
             decisionVar.s[veh_route_df.loc[len(veh_route_df)-1,'name'], depot_df.loc[veh_route_df.depot[0],'name'], allVehicles[0]] = 1 
 
+
     return routes
 
 # an auxiliary function to help calculate idle time, waiting time, overtime
@@ -190,6 +192,7 @@ def cal_ToTCost():
             veh = event[1]
             ToTIWO = ToTIWO + p.sets.p[w]*p.para.waitingPenalty*decisionVar.W[i,veh,w] 
         
+
         for event in decisionVar.I:
             i = event[0]
             veh = event[1]
@@ -238,6 +241,7 @@ def printResult(routes, ToTCost):
     print("Average Idle Time: {:.2f}".format(sum(decisionVar.I.values())/len(decisionVar.I.values())),file=p.sets.f1)
     print("Average Waiting Time: {:.2f}".format(sum(decisionVar.W.values())/len(decisionVar.W.values())),file=p.sets.f1)
     print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=p.sets.f1)
+
 
     
 p.printScen("Solving the problem using Kmeans Heuristic",p.sets.f1)
