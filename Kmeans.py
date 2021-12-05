@@ -5,8 +5,8 @@ import math
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-
 import project as p
+
 # # suppress all warnings
 # import warnings
 # warnings.filterwarnings("ignore")
@@ -85,7 +85,7 @@ def assign_PatientDepotVehicle(max_iter=500):
     for v in veh_depot.keys():
         decisionVar.x[v] = 1
         decisionVar.z[v, depot_df.loc[veh_depot[v], 'name']] = 1
-    
+        
     ######################################### assign patients to vehicles #########################################
     routes = {} # key is vehicle, value is patient df
     for d in depot_df.index:
@@ -95,7 +95,7 @@ def assign_PatientDepotVehicle(max_iter=500):
             for veh in allVehicles:
                 sort_veh = vehicle_df.loc[vehicle_df['name'].isin(allVehicles)].sort_values(['cap']).reset_index(drop=True)
                 maxCap = sort_veh.loc[len(sort_veh)-1, 'cap']
-                
+
             Depotkmeans = KMeans(n_clusters=maxCap, max_iter=max_iter) # do kmeans using the max capacity
             Depotkmeans.fit(allPatients[['tStart', 'tEnd']])
             allPatients.loc[:,'label'] = Depotkmeans.labels_
@@ -103,23 +103,31 @@ def assign_PatientDepotVehicle(max_iter=500):
                 route_df = pd.DataFrame(columns = allPatients.columns)
                 labels = allPatients.label.unique()
                 labels.sort()
+                for i in labels:
+                    route_df = route_df.append(allPatients[allPatients['label'] == i].reset_index(drop=True).iloc[0])
+                    allPatients = allPatients.drop(allPatients[allPatients['name'].isin(route_df['name'])].index, axis=0).reset_index(drop=True)
                 while len(route_df) < veh['cap'] and not allPatients.empty:
-                    for i in labels:
+                    capa_left = veh['cap'] - len(labels)
+                    labels = allPatients.label.unique()
+                    labels.sort()
+                    for i in labels[:capa_left]:
                         route_df = route_df.append(allPatients[allPatients['label'] == i].reset_index(drop=True).iloc[0])
                         allPatients = allPatients.drop(allPatients[allPatients['name'].isin(route_df['name'])].index, axis=0).reset_index(drop=True)
                 route_df = route_df.sort_values(by=['tStart']).reset_index(drop=True)
                 routes[veh['name']] = route_df
-                
+
                 for ind, pa in route_df.iterrows():
                     decisionVar.y[pa['name'], veh['name']] = 1 
                     decisionVar.s[depot_df.loc[route_df.depot[0],'name'], route_df.loc[0,'name'], veh['name']] = 1 
                     if ind > 0:
                         decisionVar.s[route_df.loc[ind-1,'name'], pa['name'], veh['name']] = 1 
                 decisionVar.s[route_df.loc[len(route_df)-1,'name'], depot_df.loc[route_df.depot[0],'name'], veh['name']] = 1 
-                
+
         else:
             veh_route_df = allPatients.sort_values(by = ['tStart']).reset_index(drop=True)
             routes[allVehicles[0]] = veh_route_df
+            allPatients = allPatients.drop(allPatients[allPatients['name'].isin(veh_route_df['name'])].index, axis=0).reset_index(drop=True)
+
 
             for ind, pa in veh_route_df.iterrows():
                 decisionVar.y[pa['name'], allVehicles[0]] = 1 
@@ -127,7 +135,7 @@ def assign_PatientDepotVehicle(max_iter=500):
                 if ind > 0:
                     decisionVar.s[veh_route_df.loc[ind-1,'name'], pa['name'], allVehicles[0]] = 1 
             decisionVar.s[veh_route_df.loc[len(veh_route_df)-1,'name'], depot_df.loc[veh_route_df.depot[0],'name'], allVehicles[0]] = 1 
-
+        print("Whether all patients assigned to the depot {} has a vehicle assigned: {}".format(depot_df.loc[d, 'name'], allPatients.empty))
 
     return routes
 
@@ -192,7 +200,6 @@ def cal_ToTCost():
             veh = event[1]
             ToTIWO = ToTIWO + p.sets.p[w]*p.para.waitingPenalty*decisionVar.W[i,veh,w] 
         
-
         for event in decisionVar.I:
             i = event[0]
             veh = event[1]
@@ -241,7 +248,6 @@ def printResult(routes, ToTCost, max_iter=500):
     print("Average Idle Time: {:.2f}".format(sum(decisionVar.I.values())/len(decisionVar.I.values())),file=p.sets.f)
     print("Average Waiting Time: {:.2f}".format(sum(decisionVar.W.values())/len(decisionVar.W.values())),file=p.sets.f)
     print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=p.sets.f)
-
 
     
 p.printScen("Solving the problem using Kmeans Heuristic",p.sets.f)
