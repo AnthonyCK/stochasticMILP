@@ -6,7 +6,7 @@ import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 
-import Project as p
+import project as p
 # # suppress all warnings
 # import warnings
 # warnings.filterwarnings("ignore")
@@ -50,7 +50,7 @@ def assign_PatientDepotVehicle(max_iter=500):
     
     # let depots to be our centroids
     centroids = stand_D
-    kmeans = KMeans(n_clusters=len(depots), init=centroids, max_iter=1) # just run one k-Means iteration so that the centroids are not updated
+    kmeans = KMeans(n_clusters=len(depots), init=centroids, max_iter=max_iter) # just run one k-Means iteration so that the centroids are not updated
     kmeans.fit(stand_P)
 
     # assign patients to depots and store the result as a dictionary
@@ -206,7 +206,7 @@ def cal_ToTCost():
     return ToTCost
 
 # print results to files
-def printResult(routes, ToTCost):
+def printResult(routes, ToTCost, max_iter=500):
     # Assignments
     vehicles = p.sets.vehicle
     vehicle_df = pd.DataFrame(columns=['name', 'cap', 'totOprTime', 'oprCost'])
@@ -220,9 +220,9 @@ def printResult(routes, ToTCost):
         else:
             depotName = [pair[1] for pair in decisionVar.z.keys() if pair[0] == k][0]
             vehStr = "Vehicle {} assigned to depot {}.".format(k, depotName)
-        print(vehStr, file=p.sets.f1)
+        print(vehStr, file=p.sets.f)
     # Routing
-    print("",file=p.sets.f1)
+    print("",file=p.sets.f)
     for k in Vehi_used:
         depotName = [pair[1] for pair in decisionVar.z.keys() if pair[0] == k][0]
         routeStr = str(depotName)
@@ -232,19 +232,19 @@ def printResult(routes, ToTCost):
                     
         routeStr += " -> {} ".format(depotName)
                     
-        print("Vehicle {}'s route: {}".format(k, routeStr),file=p.sets.f1)
+        print("Vehicle {}'s route: {}".format(k, routeStr),file=p.sets.f)
     
     # Objective Value
-    print("",file=p.sets.f1)
-    print("Kmeans Iterations: {}".format(max_iter), file=p.sets.f1)
-    print("Objective Value: {:.4f}".format(ToTCost),file=p.sets.f1)
-    print("Average Idle Time: {:.2f}".format(sum(decisionVar.I.values())/len(decisionVar.I.values())),file=p.sets.f1)
-    print("Average Waiting Time: {:.2f}".format(sum(decisionVar.W.values())/len(decisionVar.W.values())),file=p.sets.f1)
-    print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=p.sets.f1)
+    print("",file=p.sets.f)
+    print("Kmeans Iterations: {}".format(max_iter), file=p.sets.f)
+    print("Objective Value: {:.4f}".format(ToTCost),file=p.sets.f)
+    print("Average Idle Time: {:.2f}".format(sum(decisionVar.I.values())/len(decisionVar.I.values())),file=p.sets.f)
+    print("Average Waiting Time: {:.2f}".format(sum(decisionVar.W.values())/len(decisionVar.W.values())),file=p.sets.f)
+    print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=p.sets.f)
 
 
     
-p.printScen("Solving the problem using Kmeans Heuristic",p.sets.f1)
+p.printScen("Solving the problem using Kmeans Heuristic",p.sets.f)
 start_time = time.time()
 max_iter = 500
 routes = assign_PatientDepotVehicle(max_iter = max_iter)
@@ -252,4 +252,4 @@ cal_IWO(routes)
 ToTCost = cal_ToTCost()
 printResult(routes, ToTCost)
 end_time = time.time()
-p.printScen("time taken = "+str(np.round(end_time-start_time,4)) + 's',p.sets.f1)
+p.printScen("time taken = "+str(np.round(end_time-start_time,4)) + 's',p.sets.f)

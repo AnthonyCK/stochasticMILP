@@ -5,7 +5,7 @@ import pandas as pd
 import time
 from math import radians, cos, sin, asin, sqrt
 import benders
-# import Kmeans
+# import Kmeans as p
 
 ####
 # MILP model and data instance generators
@@ -198,7 +198,7 @@ class Vehicle():
         self.cap = cap
         self.totOprTime = totOprTime
         self.oprCost = oprCost
-        self.depot
+        # self.depot
 
     def __str__(self):
         return f"Vehicle: {self.name}\n  Capacity: {self.cap}\n  Total Operation Time: {self.totOprTime}\n \
@@ -223,7 +223,7 @@ class Patient():
         self.tEnd = tEnd
         self.demand = demand
         self.dur = dur
-        self.depot
+        # self.depot 
 
     def __str__(self):
         return f"Patient: {self.name}\n  Location: {self.locX, self.locY}\n  Demand: {self.dType.name}\n  Capacity: {self.dType.capacity}\n  Duration: {self.dur}\n  Start time: {self.tStart}\n  End time: {self.tEnd}"
@@ -356,7 +356,7 @@ class Sets:
         
         return vehicles, patients, depots, nodes
 
-sets = Sets("(5-30)",10)
+sets = Sets("(3-10)",10)
 para = Parameters(sets)
 
 printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
@@ -366,6 +366,22 @@ m.optimize()
 end_time = time.time()
 printScen("time taken = "+str(end_time-start_time),sets.f)
 
+printScen("Solving TSMILP Model",sets.f)
+start_time = time.time()
+m = TSMILP(sets,para)
+m.optimize()
+end_time = time.time()
+printScen("time taken = "+str(end_time-start_time),sets.f)
+
+# printScen("Solving the problem using Kmeans Heuristic",sets.f)
+# start_time = time.time()
+# max_iter = 500
+# routes = p.assign_PatientDepotVehicle(max_iter = max_iter)
+# p.cal_IWO(routes)
+# ToTCost = p.cal_ToTCost()
+# p.printResult(routes, ToTCost)
+# end_time = time.time()
+# p.printScen("time taken = "+str(end_time-start_time),sets.f)
 # for i in range(3,6):
 #     for j in [10,20,30]:
 #         sets = Sets("({}-{})".format(i,j),10)
