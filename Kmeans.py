@@ -96,7 +96,9 @@ def assign_PatientDepotVehicle(max_iter=500):
                 maxCap = sort_veh.loc[len(sort_veh)-1, 'cap']
 
             Depotkmeans = KMeans(n_clusters=maxCap, max_iter=max_iter) # do kmeans using the max capacity
-            Depotkmeans.fit(allPatients[['tStart', 'tEnd']])
+            # standardize data
+            stand_allP = StandardScaler().fit_transform(allPatients[['tStart', 'tEnd']])
+            Depotkmeans.fit(stand_allP)
             allPatients.loc[:,'label'] = Depotkmeans.labels_
             for ind, veh in sort_veh.iterrows(): # assign vehicles with the least capcaity first
                 route_df = pd.DataFrame(columns = allPatients.columns)
@@ -139,18 +141,14 @@ def assign_PatientDepotVehicle(max_iter=500):
     return routes
 
 # an auxiliary function to help calculate idle time, waiting time, overtime
-def cal_IWReal(EA, LA, wholeTime):
+def cal_IWReal(EA, wholeTime):
     if wholeTime <= EA:
         preI = EA - wholeTime
         curW = 0
         RA = EA
-    elif EA < wholeTime <= LA:
+    elif wholeTime >= EA:
         preI = 0
-        curW = 0
-        RA = wholeTime
-    elif wholeTime > LA:
-        preI = 0
-        curW = wholeTime - LA
+        curW = wholeTime - EA
         RA = wholeTime
     return preI, curW, RA
 
@@ -166,10 +164,10 @@ def cal_IWO(routes):
                 LA = route.loc[position, 'tEnd']
                 if position == 0: # if it's the first patient
                     wholeTime = RA + p.para.travelT[depotName, patient['name'], w]
-                    decisionVar.I[depotName, veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, LA, wholeTime)
+                    decisionVar.I[depotName, veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, wholeTime)
                 else:
                     wholeTime = RA + p.para.svcT[route.loc[position-1, 'name'],w] + p.para.travelT[route.loc[position-1, 'name'], patient['name'], w]
-                    decisionVar.I[route.loc[position-1, 'name'], veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, LA, wholeTime)
+                    decisionVar.I[route.loc[position-1, 'name'], veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, wholeTime)
             # after finishing the for loop of one route dataframe, calculate the overtime
             # idle time for the last patient should be zero
             decisionVar.O[veh, w] = max(RA + 0 + p.para.svcT[route.loc[len(route)-1, 'name'],w] + p.para.travelT[route.loc[len(route)-1, 'name'], depotName, w] - p.sets.vehicle[veh].totOprTime , 0)
