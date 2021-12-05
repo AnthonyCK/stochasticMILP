@@ -53,6 +53,7 @@ class TSMILP:
         try:
         # Create a new model
             model = gp.Model ("TSMILP")
+            model.Params.TimeLimit = 600
 
         # Create variables
             x = model.addVars(K, vtype = GRB.BINARY, name = "x")                # operate veh k
@@ -126,7 +127,30 @@ class TSMILP:
                         if cur == k.depot:
                             break
                     print("Vehicle {}'s route: {}".format(k.name, route),file=f)
+            it=[]
+            wt=[]
+            ot=[]
+            for w in scenarios:
+                for k in K:
+                    if x[k].x > 0.5:
+                        vehStr = "\tOvertime: {}".format(O[k,w].x)
+                        ot.append(O[k,w].x)
+                        for i in J:
+                            if y[i,k].x > 0.5:
+                                vehStr += "\n\tPatient {}: Idletime = {}, Waitingtime = {}".format(i,I[i,k,w].x,W[i,k,w].x)
+                                it.append(I[i,k,w].x)
+                                wt.append(W[i,k,w].x)
+                        for d in D:
+                            if z[k,d].x > 0.5:
+                                vehStr += "\n\tDepot {}: Idletime = {}, Waitingtime = {}".format(d,I[d,k,w].x,W[d,k,w].x)
+                                it.append(I[d,k,w].x)
+                                wt.append(W[d,k,w].x)
 
+            print("Objective Value: {:.4f}".format(model.ObjVal), file=f)
+            print("Average Idle Time: {:.2f}".format(sum(it)/len(it)),file=f)
+            print("Average Waiting Time: {:.2f}".format(sum(wt)/len(wt)),file=f)
+            print("Average Over Time: {:.2f}".format(sum(ot)/len(ot)),file=f)
+            print("Optimality Gap: {:.2%}".format(model.MIPGap), file=f)
             outputU = {i:u[i].x for i in J}
             outputS = {(i,j,k):s[i,j,k].x for i in N for j in N for k in K}
             outputX = {k:x[k].x for k in K}
@@ -359,29 +383,20 @@ class Sets:
 sets = Sets("(3-10)",10)
 para = Parameters(sets)
 
-printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-start_time = time.time()
-m = benders.MasterProblem(para,sets)
-m.optimize()
-end_time = time.time()
-printScen("time taken = "+str(end_time-start_time),sets.f)
-
-printScen("Solving TSMILP Model",sets.f)
-start_time = time.time()
-m = TSMILP(sets,para)
-m.optimize()
-end_time = time.time()
-printScen("time taken = "+str(end_time-start_time),sets.f)
-
-# printScen("Solving the problem using Kmeans Heuristic",sets.f)
+# printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
 # start_time = time.time()
-# max_iter = 500
-# routes = p.assign_PatientDepotVehicle(max_iter = max_iter)
-# p.cal_IWO(routes)
-# ToTCost = p.cal_ToTCost()
-# p.printResult(routes, ToTCost)
+# m = benders.MasterProblem(para,sets)
+# m.optimize()
 # end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time),sets.f)
+# printScen("time taken = "+str(end_time-start_time),sets.f)
+
+# printScen("Solving TSMILP Model",sets.f)
+# start_time = time.time()
+# m = TSMILP(sets,para)
+# m.optimize()
+# end_time = time.time()
+# printScen("time taken = "+str(end_time-start_time),sets.f)
+
 # for i in range(3,6):
 #     for j in [10,20,30]:
 #         sets = Sets("({}-{})".format(i,j),10)
@@ -394,8 +409,9 @@ printScen("time taken = "+str(end_time-start_time),sets.f)
 #         end_time = time.time()
 #         printScen("time taken = "+str(end_time-start_time),sets.f)
 
-# printScen("Solving TSMILP Model using K-means heuristic",sets.f)
-# start_time = time.time()
-# print(Kmeans.assign_depots(sets.depot,sets.patient))s
-# end_time = time.time()
-# printScen("time taken = "+str(end_time-start_time),sets.f)
+#         printScen("Solving TSMILP Model",sets.f)
+#         start_time = time.time()
+#         m = TSMILP(sets,para)
+#         m.optimize()
+#         end_time = time.time()
+#         printScen("time taken = "+str(end_time-start_time),sets.f)

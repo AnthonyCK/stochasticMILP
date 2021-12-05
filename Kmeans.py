@@ -6,6 +6,7 @@ import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 import project as p
+import benders
 
 # # suppress all warnings
 # import warnings
@@ -35,8 +36,8 @@ def assign_PatientDepotVehicle(max_iter=500):
     # this is the max iteration kmeans will run for each depot
     ############### assign patients to depots ######################
     # load in depots and patients information and covert it to dataframes
-    depots = p.sets.depot
-    patients = p.sets.patient
+    depots = sets.depot
+    patients = sets.patient
     depot_df = pd.DataFrame(columns=['name', 'locX', 'locY'])
     patient_df = pd.DataFrame(columns=['name', 'locX', 'locY'])
     for d in depots:
@@ -58,7 +59,7 @@ def assign_PatientDepotVehicle(max_iter=500):
 
     ########################################## assign vehicles to depots ########################################
     # load in vehicles information and covert it to dataframes
-    vehicles = p.sets.vehicle
+    vehicles = sets.vehicle
     vehicle_df = pd.DataFrame(columns=['name', 'cap', 'totOprTime', 'oprCost'])
     for v in vehicles:
         vehicle_df = vehicle_df.append({'name': v.name, 'cap': v.cap, 'totOprTime': v.totOprTime, 'oprCost': v.oprCost}, ignore_index=True)
@@ -158,7 +159,7 @@ def cal_IWReal(EA, LA, wholeTime):
 
 # calculate idle, waiting, overtime
 def cal_IWO(routes):
-    for w in p.sets.scenario:
+    for w in sets.scenario:
         for veh, route in routes.items():
             depotName = [pair[1] for pair in decisionVar.z.keys() if pair[0] == veh][0]
             RA = 0 # to store real arrival time for each patient. start from 0. 
@@ -173,41 +174,41 @@ def cal_IWO(routes):
                     decisionVar.I[route.loc[position-1, 'name'], veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, LA, wholeTime)
             # after finishing the for loop of one route dataframe, calculate the overtime
             # idle time for the last patient should be zero
-            decisionVar.O[veh, w] = max(RA + 0 + p.para.svcT[route.loc[len(route)-1, 'name'],w] + p.para.travelT[route.loc[len(route)-1, 'name'], depotName, w] - p.sets.vehicle[veh].totOprTime , 0)
+            decisionVar.O[veh, w] = max(RA + 0 + p.para.svcT[route.loc[len(route)-1, 'name'],w] + p.para.travelT[route.loc[len(route)-1, 'name'], depotName, w] - sets.vehicle[veh].totOprTime , 0)
     pass
 
 # calculate total cost
 def cal_ToTCost():
     ToTOperCost = 0
-    for veh in p.sets.K:
+    for veh in sets.K:
         try:
             ToTOperCost = ToTOperCost + p.para.oprCost[veh]*decisionVar.x[veh]
         except:
             continue
 
     ToTtravCost = 0
-    for w in p.sets.scenario:
+    for w in sets.scenario:
         for event in decisionVar.s:
             i = event[0]
             j = event[1]
             veh = event[2]
-            ToTtravCost = ToTtravCost + p.sets.p[w]*(p.para.traCost[i,j] * p.para.travelT[i,j,w] * decisionVar.s[i,j,veh])
+            ToTtravCost = ToTtravCost + sets.p[w]*(p.para.traCost[i,j] * p.para.travelT[i,j,w] * decisionVar.s[i,j,veh])
 
     ToTIWO = 0
-    for w in p.sets.scenario:
+    for w in sets.scenario:
         for event in decisionVar.W:
             i = event[0]
             veh = event[1]
-            ToTIWO = ToTIWO + p.sets.p[w]*p.para.waitingPenalty*decisionVar.W[i,veh,w] 
+            ToTIWO = ToTIWO + sets.p[w]*p.para.waitingPenalty*decisionVar.W[i,veh,w] 
         
         for event in decisionVar.I:
             i = event[0]
             veh = event[1]
-            ToTIWO = ToTIWO + p.sets.p[w]*p.para.idlePenalty*decisionVar.I[i,veh,w]
+            ToTIWO = ToTIWO + sets.p[w]*p.para.idlePenalty*decisionVar.I[i,veh,w]
             
         for event in decisionVar.O:
             veh = event[0]
-            ToTIWO = ToTIWO + p.sets.p[w]*p.para.overtimePenalty*decisionVar.O[veh,w]
+            ToTIWO = ToTIWO + sets.p[w]*p.para.overtimePenalty*decisionVar.O[veh,w]
 
     ToTCost = ToTOperCost + ToTtravCost + ToTIWO
     return ToTCost
@@ -215,7 +216,7 @@ def cal_ToTCost():
 # print results to files
 def printResult(routes, ToTCost, max_iter=500):
     # Assignments
-    vehicles = p.sets.vehicle
+    vehicles = sets.vehicle
     vehicle_df = pd.DataFrame(columns=['name', 'cap', 'totOprTime', 'oprCost'])
     for v in vehicles:
         vehicle_df = vehicle_df.append({'name': v.name, 'cap': v.cap, 'totOprTime': v.totOprTime, 'oprCost': v.oprCost}, ignore_index=True)
@@ -227,9 +228,9 @@ def printResult(routes, ToTCost, max_iter=500):
         else:
             depotName = [pair[1] for pair in decisionVar.z.keys() if pair[0] == k][0]
             vehStr = "Vehicle {} assigned to depot {}.".format(k, depotName)
-        print(vehStr, file=p.sets.f)
+        print(vehStr, file=sets.f)
     # Routing
-    print("",file=p.sets.f)
+    print("",file=sets.f)
     for k in Vehi_used:
         depotName = [pair[1] for pair in decisionVar.z.keys() if pair[0] == k][0]
         routeStr = str(depotName)
@@ -239,23 +240,52 @@ def printResult(routes, ToTCost, max_iter=500):
                     
         routeStr += " -> {} ".format(depotName)
                     
-        print("Vehicle {}'s route: {}".format(k, routeStr),file=p.sets.f)
+        print("Vehicle {}'s route: {}".format(k, routeStr),file=sets.f)
     
     # Objective Value
-    print("",file=p.sets.f)
-    print("Kmeans Iterations: {}".format(max_iter), file=p.sets.f)
-    print("Objective Value: {:.4f}".format(ToTCost),file=p.sets.f)
-    print("Average Idle Time: {:.2f}".format(sum(decisionVar.I.values())/len(decisionVar.I.values())),file=p.sets.f)
-    print("Average Waiting Time: {:.2f}".format(sum(decisionVar.W.values())/len(decisionVar.W.values())),file=p.sets.f)
-    print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=p.sets.f)
+    print("",file=sets.f)
+    print("Kmeans Iterations: {}".format(max_iter), file=sets.f)
+    print("Objective Value: {:.4f}".format(ToTCost),file=sets.f)
+    print("Average Idle Time: {:.2f}".format(sum(decisionVar.I.values())/len(decisionVar.I.values())),file=sets.f)
+    print("Average Waiting Time: {:.2f}".format(sum(decisionVar.W.values())/len(decisionVar.W.values())),file=sets.f)
+    print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=sets.f)
 
     
-p.printScen("Solving the problem using Kmeans Heuristic",p.sets.f)
-start_time = time.time()
-max_iter = 500
-routes = assign_PatientDepotVehicle(max_iter = max_iter)
-cal_IWO(routes)
-ToTCost = cal_ToTCost()
-printResult(routes, ToTCost)
-end_time = time.time()
-p.printScen("time taken = "+str(np.round(end_time-start_time,4)) + 's',p.sets.f)
+# p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
+# start_time = time.time()
+# max_iter = 500
+# routes = assign_PatientDepotVehicle(max_iter = max_iter)
+# cal_IWO(routes)
+# ToTCost = cal_ToTCost()
+# printResult(routes, ToTCost)
+# end_time = time.time()
+# p.printScen("time taken = "+str(np.round(end_time-start_time,4)) + 's',sets.f)
+
+for i in range(3,6):
+    for j in [10,20]:
+        sets = p.Sets("({}-{})".format(i,j),10)
+        para = p.Parameters(sets)
+
+        p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
+        start_time = time.time()
+        m = benders.MasterProblem(para,sets)
+        m.optimize()
+        end_time = time.time()
+        p.printScen("time taken = "+str(end_time-start_time),sets.f)
+
+        # p.printScen("Solving TSMILP Model",sets.f)
+        # start_time = time.time()
+        # m = p.TSMILP(sets,para)
+        # m.optimize()
+        # end_time = time.time()
+        # p.printScen("time taken = "+str(end_time-start_time),sets.f)
+
+        p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
+        start_time = time.time()
+        max_iter = 500
+        routes = assign_PatientDepotVehicle(max_iter = max_iter)
+        cal_IWO(routes)
+        ToTCost = cal_ToTCost()
+        printResult(routes, ToTCost)
+        end_time = time.time()
+        p.printScen("time taken = "+str(end_time-start_time) + 's',sets.f)
