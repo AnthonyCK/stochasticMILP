@@ -28,8 +28,6 @@ class DecisionVar:
         self.I = {}
         self.W= {}
 
-decisionVar = DecisionVar()
-
 
 def assign_PatientDepotVehicle(max_iter=500):
     # parameter: max_iter
@@ -165,14 +163,14 @@ def cal_IWO(routes):
                 EA = route.loc[position, 'tStart']
                 LA = route.loc[position, 'tEnd']
                 if position == 0: # if it's the first patient
-                    wholeTime = RA + p.para.travelT[depotName, patient['name'], w]
+                    wholeTime = RA + para.travelT[depotName, patient['name'], w]
                     decisionVar.I[depotName, veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, wholeTime)
                 else:
-                    wholeTime = RA + p.para.svcT[route.loc[position-1, 'name'],w] + p.para.travelT[route.loc[position-1, 'name'], patient['name'], w]
+                    wholeTime = RA + para.svcT[route.loc[position-1, 'name'],w] + para.travelT[route.loc[position-1, 'name'], patient['name'], w]
                     decisionVar.I[route.loc[position-1, 'name'], veh, w], decisionVar.W[patient['name'], veh, w], RA = cal_IWReal(EA, wholeTime)
             # after finishing the for loop of one route dataframe, calculate the overtime
             # idle time for the last patient should be zero
-            decisionVar.O[veh, w] = max(RA + 0 + p.para.svcT[route.loc[len(route)-1, 'name'],w] + p.para.travelT[route.loc[len(route)-1, 'name'], depotName, w] - sets.vehicle[veh].totOprTime , 0)
+            decisionVar.O[veh, w] = max(RA + 0 + para.svcT[route.loc[len(route)-1, 'name'],w] + para.travelT[route.loc[len(route)-1, 'name'], depotName, w] - sets.vehicle[veh].totOprTime , 0)
     pass
 
 # calculate total cost
@@ -180,7 +178,7 @@ def cal_ToTCost():
     ToTOperCost = 0
     for veh in sets.K:
         try:
-            ToTOperCost = ToTOperCost + p.para.oprCost[veh]*decisionVar.x[veh]
+            ToTOperCost = ToTOperCost + para.oprCost[veh]*decisionVar.x[veh]
         except:
             continue
 
@@ -190,23 +188,23 @@ def cal_ToTCost():
             i = event[0]
             j = event[1]
             veh = event[2]
-            ToTtravCost = ToTtravCost + sets.p[w]*(p.para.traCost[i,j] * p.para.travelT[i,j,w] * decisionVar.s[i,j,veh])
+            ToTtravCost = ToTtravCost + sets.p[w]*(para.traCost[i,j] * para.travelT[i,j,w] * decisionVar.s[i,j,veh])
 
     ToTIWO = 0
     for w in sets.scenario:
         for event in decisionVar.W:
             i = event[0]
             veh = event[1]
-            ToTIWO = ToTIWO + sets.p[w]*p.para.waitingPenalty*decisionVar.W[i,veh,w] 
+            ToTIWO = ToTIWO + sets.p[w]*para.waitingPenalty*decisionVar.W[i,veh,w] 
         
         for event in decisionVar.I:
             i = event[0]
             veh = event[1]
-            ToTIWO = ToTIWO + sets.p[w]*p.para.idlePenalty*decisionVar.I[i,veh,w]
+            ToTIWO = ToTIWO + sets.p[w]*para.idlePenalty*decisionVar.I[i,veh,w]
             
         for event in decisionVar.O:
             veh = event[0]
-            ToTIWO = ToTIWO + sets.p[w]*p.para.overtimePenalty*decisionVar.O[veh,w]
+            ToTIWO = ToTIWO + sets.p[w]*para.overtimePenalty*decisionVar.O[veh,w]
 
     ToTCost = ToTOperCost + ToTtravCost + ToTIWO
     return ToTCost
@@ -260,9 +258,11 @@ def printResult(routes, ToTCost, max_iter=500):
 # p.printScen("time taken = "+str(np.round(end_time-start_time,4)) + 's',sets.f)
 
 for i in range(3,6):
-    for j in [10,20]:
+    for j in [10,20,30]:
         sets = p.Sets("({}-{})".format(i,j),10)
         para = p.Parameters(sets)
+        decisionVar = DecisionVar()
+
 
         p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
         start_time = time.time()
@@ -271,12 +271,12 @@ for i in range(3,6):
         end_time = time.time()
         p.printScen("time taken = "+str(end_time-start_time),sets.f)
 
-        # p.printScen("Solving TSMILP Model",sets.f)
-        # start_time = time.time()
-        # m = p.TSMILP(sets,para)
-        # m.optimize()
-        # end_time = time.time()
-        # p.printScen("time taken = "+str(end_time-start_time),sets.f)
+        p.printScen("Solving TSMILP Model",sets.f)
+        start_time = time.time()
+        m = p.TSMILP(sets,para)
+        m.optimize()
+        end_time = time.time()
+        p.printScen("time taken = "+str(end_time-start_time),sets.f)
 
         p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
         start_time = time.time()

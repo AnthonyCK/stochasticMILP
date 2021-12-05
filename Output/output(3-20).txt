@@ -1,70 +1,33 @@
 
-*************************************************
-Solving TSMILP Model using Benders' Decomposition
-*************************************************
-
-Vehicle 1 assigned to depot H5.
-Vehicle 2 is not used
-Vehicle 3 is not used
-Vehicle 4 is not used
-Vehicle 5 is not used
-Vehicle 6 assigned to depot H3.
-Vehicle 7 assigned to depot H1.
-Vehicle 8 is not used
-Vehicle 9 assigned to depot H5.
-Vehicle 10 is not used
-
-Vehicle 1's route: H5 -> 4 (dist=17.72, t=293.00, proc=30.09) -> 7 (dist=16.14, t=383.00, proc=60.11) -> 5 (dist=15.00, t=480.00, proc=74.35) -> 13 (dist=13.25, t=769.00, proc=99.05) -> 2 (dist=13.81, t=916.00, proc=72.65) -> H5 (dist=0.61)
-Vehicle 6's route: H3 -> 18 (dist=3.46, t=209.00, proc=47.23) -> 16 (dist=24.41, t=295.00, proc=90.55) -> 10 (dist=31.52, t=574.00, proc=87.42) -> 1 (dist=31.83, t=734.00, proc=42.18) -> 8 (dist=22.14, t=997.00, proc=42.17) -> H3 (dist=25.23)
-Vehicle 7's route: H1 -> 14 (dist=25.45, t=47.00, proc=22.62) -> 17 (dist=13.08, t=99.00, proc=36.75) -> 20 (dist=12.74, t=153.00, proc=46.52) -> 15 (dist=26.96, t=399.00, proc=35.11) -> 6 (dist=4.61, t=508.00, proc=70.71) -> H1 (dist=8.68)
-Vehicle 9's route: H5 -> 11 (dist=7.21, t=109.00, proc=71.79) -> 9 (dist=5.92, t=233.00, proc=18.30) -> 19 (dist=16.10, t=278.00, proc=54.53) -> 3 (dist=30.82, t=387.00, proc=37.67) -> 12 (dist=2.86, t=668.00, proc=28.85) -> H5 (dist=38.99)
-
-Vehicle 1:
- 	Overtime: 0.0
-	Patient 2: Idletime = 0.0, Waitingtime = 0.0
-	Patient 4: Idletime = 0.0, Waitingtime = 0.0
-	Patient 5: Idletime = 0.0, Waitingtime = 0.0
-	Patient 7: Idletime = 0.0, Waitingtime = 0.0
-	Patient 13: Idletime = 0.0, Waitingtime = 0.0
-	Depot H5: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 6:
- 	Overtime: 0.0
-	Patient 1: Idletime = 0.0, Waitingtime = 0.0
-	Patient 8: Idletime = 0.0, Waitingtime = 0.0
-	Patient 10: Idletime = 0.0, Waitingtime = 0.0
-	Patient 16: Idletime = 0.0, Waitingtime = 0.0
-	Patient 18: Idletime = 0.0, Waitingtime = 0.0
-	Depot H3: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 7:
- 	Overtime: 61.10034566444447
-	Patient 6: Idletime = 150.17119285343716, Waitingtime = 5.080878204232431
-	Patient 14: Idletime = 209.26236586312797, Waitingtime = 0.0
-	Patient 15: Idletime = 0.0, Waitingtime = 0.0
-	Patient 17: Idletime = 0.0, Waitingtime = 0.0
-	Patient 20: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 9:
- 	Overtime: 0.0
-	Patient 3: Idletime = 0.0, Waitingtime = 0.0
-	Patient 9: Idletime = 0.0, Waitingtime = 0.0
-	Patient 11: Idletime = 0.0, Waitingtime = 0.0
-	Patient 12: Idletime = 0.0, Waitingtime = 0.0
-	Patient 19: Idletime = 0.0, Waitingtime = 0.0
-	Depot H5: Idletime = 0.0, Waitingtime = 0.0
-
-Benders Iterations: 3
-Objective Value: 152528.0328
-Average Idle Time: 14.98
-Average Waiting Time: 0.21
-Average Over Time: 15.28
-Optimality Gap: 0.00%
-
-******************************
-time taken = 4.691889762878418
-******************************
-
-
 ******************************************
 Solving the problem using Kmeans Heuristic
 ******************************************
+
+Vehicle 1 assigned to depot H5.
+Vehicle 2 assigned to depot H3.
+Vehicle 3 assigned to depot H1.
+Vehicle 4 assigned to depot H5.
+Vehicle 5 assigned to depot H3.
+Vehicle 6 assigned to depot H5.
+Vehicle 7 is not used
+Vehicle 8 is not used
+Vehicle 9 is not used
+Vehicle 10 is not used
+
+Vehicle 1's route: H5 -> patient11  -> patient9  -> patient5  -> patient1  -> patient2  -> H5 
+Vehicle 2's route: H3 -> patient18  -> patient4  -> patient15  -> patient6  -> patient13  -> H3 
+Vehicle 3's route: H1 -> patient3  -> patient10  -> patient12  -> H1 
+Vehicle 4's route: H5 -> patient14  -> patient17  -> patient16  -> patient7  -> patient8  -> H5 
+Vehicle 5's route: H3 -> patient19  -> H3 
+Vehicle 6's route: H5 -> patient20  -> H5 
+
+Kmeans Iterations: 500
+Objective Value: 111281.3431
+Average Idle Time: 146.85
+Average Waiting Time: 8.82
+Average Over Time: 129.01
+
+*********************************
+time taken = 0.17852425575256348s
+*********************************
 

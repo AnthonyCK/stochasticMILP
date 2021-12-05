@@ -1,51 +1,4 @@
 
-*************************************************
-Solving TSMILP Model using Benders' Decomposition
-*************************************************
-
-Vehicle 1 is not used
-Vehicle 2 is not used
-Vehicle 3 is not used
-Vehicle 4 is not used
-Vehicle 5 assigned to depot H1.
-Vehicle 6 assigned to depot H1.
-Vehicle 7 is not used
-Vehicle 8 is not used
-Vehicle 9 is not used
-Vehicle 10 is not used
-
-Vehicle 5's route: H1 -> 5 (dist=3.64, t=15.00, proc=44.73) -> 3 (dist=29.20, t=95.00, proc=79.15) -> 9 (dist=33.54, t=564.00, proc=40.81) -> 4 (dist=15.53, t=727.00, proc=27.37) -> 2 (dist=3.97, t=825.00, proc=40.91) -> H1 (dist=15.95)
-Vehicle 6's route: H1 -> 7 (dist=27.77, t=170.00, proc=42.81) -> 8 (dist=36.77, t=285.00, proc=44.53) -> 10 (dist=17.03, t=387.00, proc=61.34) -> 6 (dist=6.48, t=621.00, proc=42.00) -> 1 (dist=9.36, t=912.00, proc=26.99) -> H1 (dist=6.26)
-
-Vehicle 5:
- 	Overtime: 0.0
-	Patient 2: Idletime = 0.0, Waitingtime = 0.0
-	Patient 3: Idletime = 0.0, Waitingtime = 0.0
-	Patient 4: Idletime = 0.0, Waitingtime = 0.0
-	Patient 5: Idletime = 0.0, Waitingtime = 0.0
-	Patient 9: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 6:
- 	Overtime: 0.0
-	Patient 1: Idletime = 0.0, Waitingtime = 0.0
-	Patient 6: Idletime = 0.0, Waitingtime = 0.0
-	Patient 7: Idletime = 0.0, Waitingtime = 0.0
-	Patient 8: Idletime = 0.0, Waitingtime = 0.0
-	Patient 10: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 0.0, Waitingtime = 0.0
-
-Benders Iterations: 3
-Objective Value: 34690.9006
-Average Idle Time: 0.00
-Average Waiting Time: 0.00
-Average Over Time: 0.00
-Optimality Gap: 0.00%
-
-*******************************
-time taken = 1.4200785160064697
-*******************************
-
-
 ******************************************
 Solving the problem using Kmeans Heuristic
 ******************************************
@@ -66,12 +19,12 @@ Vehicle 2's route: H1 -> patient5  -> patient8  -> patient9  -> H1
 Vehicle 3's route: H5 -> patient3  -> patient7  -> H5 
 
 Kmeans Iterations: 500
-Objective Value: 35389.3231
-Average Idle Time: 123.15
-Average Waiting Time: 0.00
-Average Over Time: 75.43
+Objective Value: 36729.2218
+Average Idle Time: 129.36
+Average Waiting Time: 2.29
+Average Over Time: 76.30
 
 *********************************
-time taken = 0.11270022392272949s
+time taken = 0.07480049133300781s
 *********************************
 
