@@ -5,9 +5,7 @@ import math
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-
-import project as p
-
+import Project as p
 import benders
 
 # # suppress all warnings
@@ -49,10 +47,8 @@ def assign_PatientDepotVehicle(max_iter=500):
     stand_D = StandardScaler().fit_transform(depot_df[['locX', 'locY']])
     stand_P = StandardScaler().fit_transform(patient_df[['locX', 'locY']])
     
-
     # use Kmeans to cluster patients (n_cluster = depot number)    
     kmeans = KMeans(n_clusters=len(depots), max_iter=max_iter) 
-
     kmeans.fit(stand_P)
 
     ## after clustering, find the nearest depot for each centroid
@@ -259,25 +255,6 @@ def printResult(routes, ToTCost, max_iter=500):
     print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=sets.f)
 
     
-# sets = p.Sets("({}-{})".format(3,10),10)
-# para = p.Parameters(sets)
-# decisionVar = DecisionVar()
-
-
-# p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-# start_time = time.time()
-# m = benders.MasterProblem(para,sets)
-# m.optimize()
-# end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time),sets.f)
-
-# p.printScen("Solving TSMILP Model",sets.f)
-# start_time = time.time()
-# m = p.TSMILP(sets,para)
-# m.optimize()
-# end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time),sets.f)
-
 # p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
 # start_time = time.time()
 # max_iter = 500
@@ -286,7 +263,7 @@ def printResult(routes, ToTCost, max_iter=500):
 # ToTCost = cal_ToTCost()
 # printResult(routes, ToTCost)
 # end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time) + 's',sets.f)
+# p.printScen("time taken = "+str(np.round(end_time-start_time,4)) + 's',sets.f)
 
 for i in range(3,6):
     for j in [10,20,30]:
@@ -308,7 +285,6 @@ for i in range(3,6):
         # m.optimize()
         # end_time = time.time()
         # p.printScen("time taken = "+str(end_time-start_time),sets.f)
-
 
         p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
         start_time = time.time()
