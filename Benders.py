@@ -212,8 +212,7 @@ class MasterProblem:
 
         self._update_bounds()
 
-        while((self.data.ub > self.data.lb + self.data.delta 
-        or self.data.ub - self.data.lb > abs(self.data.epsilon * self.data.lb)) and len(self.data.cutlist) < self.params.max_iters):
+        while(( self.data.ub - self.data.lb > abs(self.data.epsilon * self.data.lb)) and len(self.data.cutlist) < self.params.max_iters):
         
             if self.params.verbose:
                 print('********')

@@ -1,0 +1,150 @@
+
+*************************************************
+Solving TSMILP Model using Benders' Decomposition
+*************************************************
+
+Vehicle 1 assigned to depot H2.
+Vehicle 2 is not used
+Vehicle 3 is not used
+Vehicle 4 assigned to depot H3.
+Vehicle 5 is not used
+Vehicle 6 assigned to depot H4.
+Vehicle 7 assigned to depot H1.
+Vehicle 8 assigned to depot H3.
+Vehicle 9 is not used
+Vehicle 10 assigned to depot H3.
+
+Vehicle 1's route: H2 -> 13 (dist=13.87, t=60.00, proc=45.89) -> 18 (dist=7.40, t=179.00, proc=35.26) -> 26 (dist=22.55, t=575.00, proc=29.77) -> 27 (dist=16.39, t=641.00, proc=19.34) -> 23 (dist=30.18, t=737.00, proc=37.95) -> H2 (dist=25.14)
+Vehicle 4's route: H3 -> 24 (dist=6.98, t=50.00, proc=44.26) -> 10 (dist=9.22, t=357.00, proc=84.34) -> 16 (dist=3.95, t=475.00, proc=47.09) -> 22 (dist=6.95, t=645.00, proc=51.23) -> 25 (dist=16.14, t=836.00, proc=43.66) -> H3 (dist=17.51)
+Vehicle 6's route: H4 -> 9 (dist=25.73, t=534.00, proc=52.43) -> 12 (dist=12.51, t=660.54, proc=34.80) -> 29 (dist=7.27, t=703.00, proc=47.82) -> 2 (dist=16.35, t=825.00, proc=39.89) -> 1 (dist=25.71, t=912.00, proc=74.34) -> H4 (dist=26.88)
+Vehicle 7's route: H1 -> 20 (dist=27.31, t=10.00, proc=53.48) -> 3 (dist=0.58, t=95.00, proc=27.38) -> 19 (dist=4.07, t=308.00, proc=42.13) -> 15 (dist=38.11, t=414.00, proc=47.23) -> 4 (dist=15.57, t=727.00, proc=53.11) -> H1 (dist=11.08)
+Vehicle 8's route: H3 -> 17 (dist=3.49, t=99.00, proc=86.50) -> 8 (dist=10.25, t=285.00, proc=39.61) -> 30 (dist=14.99, t=402.00, proc=23.57) -> 14 (dist=12.88, t=567.00, proc=20.75) -> 6 (dist=16.07, t=621.00, proc=36.67) -> H3 (dist=14.62)
+Vehicle 10's route: H3 -> 5 (dist=2.06, t=45.00, proc=23.91) -> 21 (dist=20.12, t=115.00, proc=36.12) -> 7 (dist=38.72, t=200.00, proc=48.37) -> 11 (dist=34.18, t=478.00, proc=34.00) -> 28 (dist=11.56, t=652.00, proc=44.31) -> H3 (dist=11.64)
+
+Vehicle 1:
+ 	Overtime: 51.38308278343352
+	Patient 13: Idletime = 0.0, Waitingtime = 0.0
+	Patient 18: Idletime = 0.0, Waitingtime = 0.0
+	Patient 23: Idletime = 0.0, Waitingtime = 0.0
+	Patient 26: Idletime = 0.0, Waitingtime = 0.0
+	Patient 27: Idletime = 0.0, Waitingtime = 0.0
+	Depot H2: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 4:
+ 	Overtime: 89.49470365137772
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Patient 16: Idletime = 0.0, Waitingtime = 0.0
+	Patient 22: Idletime = 57.449917586102856, Waitingtime = 0.0
+	Patient 24: Idletime = 0.0, Waitingtime = 0.0
+	Patient 25: Idletime = 0.0, Waitingtime = 0.0
+	Depot H3: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 6:
+ 	Overtime: 80.92324884471873
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 12: Idletime = 0.0, Waitingtime = 0.0
+	Patient 29: Idletime = 0.0, Waitingtime = 0.0
+	Depot H4: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 7:
+ 	Overtime: 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 15: Idletime = 0.0, Waitingtime = 0.0
+	Patient 19: Idletime = 0.0, Waitingtime = 0.0
+	Patient 20: Idletime = 0.0, Waitingtime = 0.0
+	Depot H1: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 8:
+ 	Overtime: 328.1910249715574
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Patient 14: Idletime = 0.0, Waitingtime = 0.0
+	Patient 17: Idletime = 0.0, Waitingtime = 0.0
+	Patient 30: Idletime = 0.0, Waitingtime = 0.0
+	Depot H3: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 10:
+ 	Overtime: 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 11: Idletime = 0.0, Waitingtime = 0.0
+	Patient 21: Idletime = 0.0, Waitingtime = 0.0
+	Patient 28: Idletime = 0.0, Waitingtime = 0.0
+	Depot H3: Idletime = 0.0, Waitingtime = 0.0
+
+Benders Iterations: 500
+Objective Value: 275122.8498
+Average Idle Time: 1.60
+Average Waiting Time: 0.00
+Average Over Time: 91.67
+Optimality Gap: 0.00%
+
+*****************************
+time taken = 516.160355091095
+*****************************
+
+
+********************
+Solving TSMILP Model
+********************
+
+Vehicle 1 is not used
+Vehicle 2 assigned to depot H1.
+Vehicle 3 assigned to depot H1.
+Vehicle 4 is not used
+Vehicle 5 assigned to depot H3.
+Vehicle 6 assigned to depot H2.
+Vehicle 7 is not used
+Vehicle 8 assigned to depot H5.
+Vehicle 9 is not used
+Vehicle 10 assigned to depot H3.
+
+Vehicle 2's route: H1 -> 7 (dist=27.94, t=200.00, proc=48.37) -> 15 (dist=36.37, t=414.00, proc=47.23) -> 6 (dist=7.56, t=621.00, proc=36.67) -> 23 (dist=30.18, t=737.00, proc=37.95) -> 2 (dist=38.05, t=825.00, proc=39.89) -> H1 (dist=11.59)
+Vehicle 3's route: H1 -> 3 (dist=27.88, t=65.00, proc=27.38) -> 18 (dist=37.17, t=209.00, proc=35.26) -> 16 (dist=20.32, t=475.00, proc=47.09) -> 27 (dist=14.29, t=641.00, proc=19.34) -> 12 (dist=14.32, t=675.42, proc=34.80) -> H1 (dist=10.99)
+Vehicle 5's route: H3 -> 8 (dist=8.49, t=255.00, proc=39.61) -> 10 (dist=6.31, t=357.00, proc=84.34) -> 11 (dist=18.57, t=478.00, proc=34.00) -> 26 (dist=18.00, t=575.00, proc=29.77) -> 22 (dist=5.03, t=645.00, proc=51.23) -> H3 (dist=4.97)
+Vehicle 6's route: H2 -> 5 (dist=11.74, t=15.00, proc=23.91) -> 24 (dist=8.18, t=50.00, proc=44.26) -> 17 (dist=7.62, t=129.00, proc=86.50) -> 9 (dist=7.15, t=534.00, proc=52.43) -> 28 (dist=12.64, t=652.00, proc=44.31) -> H2 (dist=4.86)
+Vehicle 8's route: H5 -> 20 (dist=0.61, t=10.00, proc=53.48) -> 21 (dist=38.08, t=115.00, proc=36.12) -> 19 (dist=40.70, t=278.00, proc=42.13) -> 30 (dist=5.06, t=432.00, proc=23.57) -> 14 (dist=12.88, t=567.00, proc=20.75) -> H5 (dist=14.25)
+Vehicle 10's route: H3 -> 13 (dist=20.25, t=60.00, proc=45.89) -> 29 (dist=16.92, t=703.00, proc=47.82) -> 4 (dist=3.41, t=754.40, proc=53.11) -> 25 (dist=15.16, t=836.00, proc=43.66) -> 1 (dist=20.52, t=912.00, proc=74.34) -> H3 (dist=5.98)
+Objective Value: 188498.5197
+Average Idle Time: 82.11
+Average Waiting Time: 5.65
+Average Over Time: 87.54
+Optimality Gap: 88.30%
+
+******************************
+time taken = 603.4935100078583
+******************************
+
+
+******************************************
+Solving the problem using Kmeans Heuristic
+******************************************
+
+Vehicle 1 assigned to depot H1.
+Vehicle 2 assigned to depot H3.
+Vehicle 3 assigned to depot H5.
+Vehicle 4 assigned to depot H2.
+Vehicle 5 assigned to depot H4.
+Vehicle 6 assigned to depot H1.
+Vehicle 7 assigned to depot H3.
+Vehicle 8 assigned to depot H5.
+Vehicle 9 is not used
+Vehicle 10 is not used
+
+Vehicle 1's route: H1 -> patient13  -> patient18  -> patient11  -> patient6  -> patient2  -> H1 
+Vehicle 2's route: H3 -> patient5  -> patient8  -> patient16  -> patient22  -> patient1  -> H3 
+Vehicle 3's route: H5 -> patient3  -> patient7  -> patient19  -> patient30  -> patient23  -> H5 
+Vehicle 4's route: H2 -> patient24  -> patient17  -> patient9  -> patient29  -> patient4  -> H2 
+Vehicle 5's route: H4 -> patient14  -> patient12  -> patient28  -> patient25  -> H4 
+Vehicle 6's route: H1 -> patient21  -> patient15  -> patient27  -> H1 
+Vehicle 7's route: H3 -> patient10  -> patient26  -> H3 
+Vehicle 8's route: H5 -> patient20  -> H5 
+
+Kmeans Iterations: 500
+Objective Value: 121685.9984
+Average Idle Time: 138.89
+Average Waiting Time: 4.11
+Average Over Time: 95.48
+
+*********************************
+time taken = 0.23723340034484863s
+*********************************
+

@@ -380,8 +380,8 @@ class Sets:
         
         return vehicles, patients, depots, nodes
 
-sets = Sets("(3-10)",10)
-para = Parameters(sets)
+# sets = Sets("(3-20)",10)
+# para = Parameters(sets)
 
 # printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
 # start_time = time.time()
