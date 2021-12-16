@@ -1,0 +1,47 @@
+
+*************************************************
+Solving TSMILP Model using Benders' Decomposition
+*************************************************
+
+Vehicle 1 is not used
+Vehicle 2 is not used
+Vehicle 3 is not used
+Vehicle 4 is not used
+Vehicle 5 is not used
+Vehicle 6 is not used
+Vehicle 7 is not used
+Vehicle 8 assigned to depot H3.
+Vehicle 9 is not used
+Vehicle 10 assigned to depot H1.
+
+Vehicle 8's route: H3 -> 5 (dist=13.69, t=15.00, proc=29.97) -> 3 (dist=29.20, t=95.00, proc=62.89) -> 8 (dist=36.65, t=255.00, proc=52.02) -> 6 (dist=19.48, t=621.00, proc=38.96) -> 1 (dist=9.36, t=912.00, proc=37.27) -> H3 (dist=6.68)
+Vehicle 10's route: H1 -> 7 (dist=27.77, t=170.00, proc=23.88) -> 10 (dist=19.76, t=387.00, proc=43.49) -> 9 (dist=14.95, t=564.00, proc=45.69) -> 4 (dist=15.53, t=727.00, proc=32.38) -> 2 (dist=3.97, t=825.00, proc=56.60) -> H1 (dist=15.95)
+
+Vehicle 8:
+ 	Overtime: 0.0
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Depot H3: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 10:
+ 	Overtime: 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Depot H1: Idletime = 0.0, Waitingtime = 0.0
+
+Benders Iterations: 4
+Objective Value: 36889.0688
+Average Idle Time: 0.00
+Average Waiting Time: 0.00
+Average Over Time: 0.00
+Optimality Gap: 0.08%
+
+******************************
+time taken = 1.395305871963501
+******************************
+

@@ -380,15 +380,15 @@ class Sets:
         
         return vehicles, patients, depots, nodes
 
-# sets = Sets("(3-20)",10)
-# para = Parameters(sets)
+sets = Sets("(3-10)",10)
+para = Parameters(sets)
 
-# printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-# start_time = time.time()
-# m = benders.MasterProblem(para,sets)
-# m.optimize()
-# end_time = time.time()
-# printScen("time taken = "+str(end_time-start_time),sets.f)
+printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
+start_time = time.time()
+m = benders.MasterProblem(para,sets)
+m.optimize()
+end_time = time.time()
+printScen("time taken = "+str(end_time-start_time),sets.f)
 
 # printScen("Solving TSMILP Model",sets.f)
 # start_time = time.time()

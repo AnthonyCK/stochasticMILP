@@ -212,7 +212,9 @@ class MasterProblem:
 
         self._update_bounds()
 
-        while(( self.data.ub - self.data.lb > abs(self.data.epsilon * self.data.lb)) and len(self.data.cutlist) < self.params.max_iters):
+        while(
+            ( self.data.ub - self.data.lb > abs(self.data.epsilon * self.data.lb)) and 
+        len(self.data.cutlist) < self.params.max_iters):
         
             if self.params.verbose:
                 print('********')
@@ -220,16 +222,23 @@ class MasterProblem:
                 print('* Upper bound: {0}'.format(self.data.ub))
                 print('* Lower bound: {0}'.format(self.data.lb))
                 print('********')
+            self._add_cut()
             self._do_benders_step()
         pass
 
         self._printResult()
     
     def _do_benders_step(self):
-        self._add_cut()
         self.model.optimize()
         [sm.update_fixed_vars(self) for sm in self.submodels.values()]
-        [sm.optimize() for sm in self.submodels.values()]
+        infeas = 0
+        for sm in self.submodels.values():
+            if GRB.OPTIMAL == 3:
+                infeas = 1
+        if infeas == 0:
+            self._add_cut()
+        elif infeas == 1:
+            self._add_feascut()
         self._update_bounds()
 
     def _add_cut(self):
@@ -246,6 +255,27 @@ class MasterProblem:
         # Generate cut
         self.constraints.cuts[cut] = self.model.addConstr(
             self.variables.alpha,
+            GRB.GREATER_EQUAL,
+            z_sub +
+            gp.quicksum(sens_s[i,j,k] * self.variables.s[i,j,k] for i in N for j in N for k in K) -
+            sum(sens_s[i,j,k] * self.variables.s[i,j,k].x for i in N for j in N for k in K) +
+            gp.quicksum(sens_u[j] * (self.variables.u[j] - self.variables.u[j].x) for j in J)
+        )
+
+    def _add_feascut(self):
+        cut = len(self.data.cutlist)
+        self.data.cutlist.append(cut)
+
+        sens_s = {
+            (i,j,k): sum(p[w] * self.submodels[w].constraints.fix_s[i,j,k].pi for w in scenarios)
+             for i in N for j in N for k in K}
+        self.data.lambdas[cut] = sens_s
+        sens_u = {j:sum(p[w] * self.submodels[w].constraints.fix_u[j].pi for w in scenarios) for j in J}
+        # Get subproblem objectives
+        z_sub = sum(p[w] * self.submodels[w].model.ObjVal for w in scenarios)
+        # Generate cut
+        self.constraints.cuts[cut] = self.model.addConstr(
+            0,
             GRB.GREATER_EQUAL,
             z_sub +
             gp.quicksum(sens_s[i,j,k] * self.variables.s[i,j,k] for i in N for j in N for k in K) -
