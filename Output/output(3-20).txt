@@ -1,65 +1,33 @@
 
-*************************************************
-Solving TSMILP Model using Benders' Decomposition
-*************************************************
+******************************************
+Solving the problem using Kmeans Heuristic
+******************************************
 
-Vehicle 1 is not used
-Vehicle 2 is not used
-Vehicle 3 is not used
-Vehicle 4 is not used
-Vehicle 5 is not used
+Vehicle 1 assigned to depot H5.
+Vehicle 2 assigned to depot H3.
+Vehicle 3 assigned to depot H1.
+Vehicle 4 assigned to depot H5.
+Vehicle 5 assigned to depot H3.
 Vehicle 6 assigned to depot H5.
-Vehicle 7 assigned to depot H5.
+Vehicle 7 is not used
 Vehicle 8 is not used
-Vehicle 9 assigned to depot H1.
-Vehicle 10 assigned to depot H1.
+Vehicle 9 is not used
+Vehicle 10 is not used
 
-Vehicle 6's route: H5 -> 18 (dist=22.56, t=179.00, proc=18.85) -> 4 (dist=7.20, t=293.00, proc=31.09) -> 15 (dist=7.99, t=369.00, proc=36.55) -> 5 (dist=24.86, t=450.00, proc=80.66) -> 13 (dist=13.25, t=769.00, proc=38.02) -> H5 (dist=13.58)
-Vehicle 7's route: H5 -> 20 (dist=19.33, t=123.00, proc=47.17) -> 7 (dist=8.03, t=383.00, proc=18.74) -> 6 (dist=19.47, t=478.00, proc=38.47) -> 2 (dist=28.06, t=916.00, proc=39.80) -> 8 (dist=17.82, t=997.00, proc=28.39) -> H5 (dist=17.22)
-Vehicle 9's route: H1 -> 11 (dist=20.31, t=109.00, proc=29.63) -> 16 (dist=9.90, t=265.00, proc=68.54) -> 3 (dist=40.38, t=417.00, proc=40.72) -> 10 (dist=8.89, t=574.00, proc=35.77) -> 12 (dist=10.37, t=668.00, proc=45.74) -> H1 (dist=13.44)
-Vehicle 10's route: H1 -> 14 (dist=25.45, t=47.00, proc=33.18) -> 17 (dist=13.08, t=129.00, proc=53.81) -> 9 (dist=10.87, t=203.00, proc=43.62) -> 19 (dist=16.10, t=308.00, proc=38.54) -> 1 (dist=17.30, t=734.00, proc=63.74) -> H1 (dist=30.34)
+Vehicle 1's route: H5 -> patient11  -> patient9  -> patient5  -> patient1  -> patient2  -> H5 
+Vehicle 2's route: H3 -> patient18  -> patient4  -> patient15  -> patient6  -> patient13  -> H3 
+Vehicle 3's route: H1 -> patient3  -> patient10  -> patient12  -> H1 
+Vehicle 4's route: H5 -> patient14  -> patient17  -> patient16  -> patient7  -> patient8  -> H5 
+Vehicle 5's route: H3 -> patient19  -> H3 
+Vehicle 6's route: H5 -> patient20  -> H5 
 
-Vehicle 6:
- 	Overtime: 0.0
-	Patient 4: Idletime = 0.0, Waitingtime = 0.0
-	Patient 5: Idletime = 0.0, Waitingtime = 0.0
-	Patient 13: Idletime = 0.0, Waitingtime = 0.0
-	Patient 15: Idletime = 0.0, Waitingtime = 0.0
-	Patient 18: Idletime = 0.0, Waitingtime = 0.0
-	Depot H5: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 7:
- 	Overtime: 82.66169033485713
-	Patient 2: Idletime = 0.0, Waitingtime = 0.0
-	Patient 6: Idletime = 0.0, Waitingtime = 0.0
-	Patient 7: Idletime = 4.200317957845073, Waitingtime = 25.571626311245517
-	Patient 8: Idletime = 0.0, Waitingtime = 0.0
-	Patient 20: Idletime = 0.0, Waitingtime = 0.0
-	Depot H5: Idletime = 201.0083692422313, Waitingtime = 0.0
-Vehicle 9:
- 	Overtime: 49.32566492551696
-	Patient 3: Idletime = 0.0, Waitingtime = 0.0
-	Patient 10: Idletime = 0.0, Waitingtime = 0.0
-	Patient 11: Idletime = 55.00730715833888, Waitingtime = 0.0
-	Patient 12: Idletime = 1.0071022949729467, Waitingtime = 15.588201539281272
-	Patient 16: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 10:
- 	Overtime: 356.12533431572047
-	Patient 1: Idletime = 0.0, Waitingtime = 0.0
-	Patient 9: Idletime = 0.0, Waitingtime = 0.0
-	Patient 14: Idletime = 0.0, Waitingtime = 0.0
-	Patient 17: Idletime = 0.0, Waitingtime = 0.0
-	Patient 19: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 104.93992175936819, Waitingtime = 0.0
+Kmeans Iterations: 500
+Objective Value: 111281.3431
+Average Idle Time: 146.85
+Average Waiting Time: 8.82
+Average Over Time: 129.01
 
-Benders Iterations: 3
-Objective Value: 137561.6110
-Average Idle Time: 6.62
-Average Waiting Time: 1.71
-Average Over Time: 122.03
-Optimality Gap: -0.00%
-
-******************************
-time taken = 4.477180004119873
-******************************
+*********************************
+time taken = 0.17852425575256348s
+*********************************
 

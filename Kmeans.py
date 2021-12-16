@@ -5,7 +5,9 @@ import math
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-import Project as p
+
+import project as p
+
 import benders
 
 # # suppress all warnings
@@ -47,8 +49,10 @@ def assign_PatientDepotVehicle(max_iter=500):
     stand_D = StandardScaler().fit_transform(depot_df[['locX', 'locY']])
     stand_P = StandardScaler().fit_transform(patient_df[['locX', 'locY']])
     
+
     # use Kmeans to cluster patients (n_cluster = depot number)    
     kmeans = KMeans(n_clusters=len(depots), max_iter=max_iter) 
+
     kmeans.fit(stand_P)
 
     ## after clustering, find the nearest depot for each centroid
@@ -285,6 +289,7 @@ for i in range(3,6):
         # m.optimize()
         # end_time = time.time()
         # p.printScen("time taken = "+str(end_time-start_time),sets.f)
+
 
         p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
         start_time = time.time()

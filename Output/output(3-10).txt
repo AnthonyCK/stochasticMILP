@@ -1,47 +1,30 @@
 
-*************************************************
-Solving TSMILP Model using Benders' Decomposition
-*************************************************
+******************************************
+Solving the problem using Kmeans Heuristic
+******************************************
 
-Vehicle 1 is not used
-Vehicle 2 is not used
-Vehicle 3 is not used
-Vehicle 4 assigned to depot H1.
+Vehicle 1 assigned to depot H3.
+Vehicle 2 assigned to depot H1.
+Vehicle 3 assigned to depot H5.
+Vehicle 4 is not used
 Vehicle 5 is not used
 Vehicle 6 is not used
-Vehicle 7 assigned to depot H1.
+Vehicle 7 is not used
 Vehicle 8 is not used
 Vehicle 9 is not used
 Vehicle 10 is not used
 
-Vehicle 4's route: H1 -> 3 (dist=25.56, t=65.00, proc=28.16) -> 8 (dist=36.65, t=285.00, proc=43.77) -> 10 (dist=17.03, t=387.00, proc=60.57) -> 2 (dist=7.29, t=855.00, proc=27.87) -> 1 (dist=9.74, t=912.00, proc=49.02) -> H1 (dist=6.26)
-Vehicle 7's route: H1 -> 5 (dist=3.64, t=15.00, proc=46.54) -> 7 (dist=31.05, t=170.00, proc=37.90) -> 9 (dist=34.47, t=564.00, proc=32.22) -> 6 (dist=18.47, t=621.00, proc=35.20) -> 4 (dist=3.44, t=727.00, proc=43.88) -> H1 (dist=12.19)
+Vehicle 1's route: H3 -> patient10  -> patient6  -> patient4  -> patient2  -> patient1  -> H3 
+Vehicle 2's route: H1 -> patient5  -> patient8  -> patient9  -> H1 
+Vehicle 3's route: H5 -> patient3  -> patient7  -> H5 
 
-Vehicle 4:
- 	Overtime: 0.0
-	Patient 1: Idletime = 0.0, Waitingtime = 0.0
-	Patient 2: Idletime = 0.0, Waitingtime = 0.0
-	Patient 3: Idletime = 0.0, Waitingtime = 0.0
-	Patient 8: Idletime = 0.0, Waitingtime = 0.0
-	Patient 10: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 0.0, Waitingtime = 0.0
-Vehicle 7:
- 	Overtime: 0.0
-	Patient 4: Idletime = 0.0, Waitingtime = 0.0
-	Patient 5: Idletime = 0.0, Waitingtime = 0.0
-	Patient 6: Idletime = 0.0, Waitingtime = 0.0
-	Patient 7: Idletime = 0.0, Waitingtime = 0.0
-	Patient 9: Idletime = 0.0, Waitingtime = 0.0
-	Depot H1: Idletime = 0.0, Waitingtime = 0.0
+Kmeans Iterations: 500
+Objective Value: 36729.2218
+Average Idle Time: 129.36
+Average Waiting Time: 2.29
+Average Over Time: 76.30
 
-Benders Iterations: 4
-Objective Value: 37679.3276
-Average Idle Time: 0.00
-Average Waiting Time: 0.00
-Average Over Time: 0.00
-Optimality Gap: 0.00%
-
-*******************************
-time taken = 1.5177910327911377
-*******************************
+*********************************
+time taken = 0.07480049133300781s
+*********************************
 

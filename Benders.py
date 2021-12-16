@@ -309,8 +309,8 @@ class MasterProblem:
                 for d in D:
                     if self.variables.z[k,d].x > 0.5:
                         vehStr += "\n\tDepot {}: Idletime = {}, Waitingtime = {}".format(d,I[d,k],W[d,k])
-                        it.append(I[i,k])
-                        wt.append(W[i,k])
+                        it.append(I[d,k])
+                        wt.append(W[d,k])
                 print("Vehicle {}:\n {}".format(k, vehStr),file=f)
         # Optimality Gap
         print("",file=f)
