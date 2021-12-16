@@ -5,9 +5,7 @@ import math
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-
-import project as p
-
+import Project as p
 import benders
 
 # # suppress all warnings
@@ -49,10 +47,8 @@ def assign_PatientDepotVehicle(max_iter=500):
     stand_D = StandardScaler().fit_transform(depot_df[['locX', 'locY']])
     stand_P = StandardScaler().fit_transform(patient_df[['locX', 'locY']])
     
-
     # use Kmeans to cluster patients (n_cluster = depot number)    
     kmeans = KMeans(n_clusters=len(depots), max_iter=max_iter) 
-
     kmeans.fit(stand_P)
 
     ## after clustering, find the nearest depot for each centroid
@@ -96,6 +92,7 @@ def assign_PatientDepotVehicle(max_iter=500):
         decisionVar.x[v] = 1
         decisionVar.z[v, depot_df.loc[veh_depot[v], 'name']] = 1
         
+        
     ######################################### assign patients to vehicles #########################################
     routes = {} # key is vehicle, value is patient df
     for d in depot_df.index:
@@ -103,38 +100,54 @@ def assign_PatientDepotVehicle(max_iter=500):
         allVehicles = [v for v,de in veh_depot.items() if de == d]
         if len(allVehicles) > 1:
             for veh in allVehicles:
-                sort_veh = vehicle_df.loc[vehicle_df['name'].isin(allVehicles)].sort_values(['cap']).reset_index(drop=True)
-                maxCap = sort_veh.loc[len(sort_veh)-1, 'cap']
-                #minCap = sort_veh.loc[0, 'cap']
+                sort_veh = vehicle_df.loc[vehicle_df['name'].isin(allVehicles)].sort_values(['cap']).reset_index(drop=True) # sort from min cap to max cap
 
-            Depotkmeans = KMeans(n_clusters=maxCap, max_iter=max_iter) # do kmeans using the max capacity
+            Depotkmeans = KMeans(n_clusters=len(allVehicles), max_iter=max_iter) # do kmeans using the vehicle number
             # standardize data
-            stand_allP = StandardScaler().fit_transform(allPatients[['tStart', 'tEnd']])
+            stand_allP = StandardScaler().fit_transform(allPatients[['locX', 'locY']])
             Depotkmeans.fit(stand_allP)
             allPatients.loc[:,'label'] = Depotkmeans.labels_
-            for ind, veh in sort_veh.iterrows(): # assign vehicles with the least capcaity first
-                route_df = pd.DataFrame(columns = allPatients.columns)
-                labels = allPatients.label.unique()
-                labels.sort()
-                for i in labels:
-                    route_df = route_df.append(allPatients[allPatients['label'] == i].reset_index(drop=True).iloc[0])
-                    allPatients = allPatients.drop(allPatients[allPatients['name'].isin(route_df['name'])].index, axis=0).reset_index(drop=True)
-                while len(route_df) < veh['cap'] and not allPatients.empty:
-                    capa_left = veh['cap'] - len(labels)
-                    labels = allPatients.label.unique()
-                    labels.sort()
-                    for i in labels[:capa_left]:
-                        route_df = route_df.append(allPatients[allPatients['label'] == i].reset_index(drop=True).iloc[0])
-                        allPatients = allPatients.drop(allPatients[allPatients['name'].isin(route_df['name'])].index, axis=0).reset_index(drop=True)
-                route_df = route_df.sort_values(by=['tStart']).reset_index(drop=True)
-                routes[veh['name']] = route_df
+
+
+            label_num = {l : len(allPatients[allPatients.label == l]) for l in list(np.unique(allPatients.label))} # after kmeans, each label has how many patients
+            overload_veh = {ind: num - sort_veh.iloc[ind]['cap']  for ind, num in label_num.items() if num > sort_veh.iloc[ind]['cap']}
+            if overload_veh != {}:
+                for v in overload_veh.keys():
+                    candi_patient = allPatients[allPatients.label == v].sort_values(by = ['tStart']).reset_index(drop=True)
+                    diff = [candi_patient.loc[0, 'tStart']]
+                    diff.extend([p['tStart'] - candi_patient.loc[ind-1, 'tStart'] for ind, p in candi_patient.iterrows() if ind > 0])
+                    while overload_veh[v] != 0:
+                        label_num = {l : len(allPatients[allPatients.label == l]) for l in list(np.unique(allPatients.label))}
+                        patient_name = candi_patient.loc[diff.index(min(diff)), 'name']
+                        patient_ind = allPatients[allPatients['name'] == patient_name].index
+                        allPatients.loc[patient_ind,'label'] = [l for l,num in label_num.items() if num == min(label_num.values())][0]
+                        overload_veh[v] = overload_veh[v] - 1
+
+            ## for all vehicles, swap patients with similar time windows
+            for vInd in list(np.unique(allPatients.label)):
+                candi_patient = allPatients[allPatients.label == vInd].sort_values(by = ['tStart']).reset_index(drop=True)
+                diff = [candi_patient.loc[0, 'tStart']]
+                diff.extend([p['tStart'] - candi_patient.loc[ind-1, 'tStart'] for ind, p in candi_patient.iterrows() if ind > 0])
+                for difference in diff[1:]:
+                    if difference <= 30:
+                        label_num = {l : len(allPatients[allPatients.label == l]) for l in list(np.unique(allPatients.label))}
+                        patient_name = candi_patient.loc[diff.index(min(diff)), 'name']
+                        patient_ind = allPatients[allPatients['name'] == patient_name].index
+                        allPatients.loc[patient_ind,'label'] = [l for l,num in label_num.items() if num == min(label_num.values())][0]
+
+            ## assign patients to vehicles
+            for vInd in list(np.unique(allPatients.label)):
+                route_df = allPatients[allPatients.label == vInd].sort_values(by=['tStart']).reset_index(drop=True)
+                routes[sort_veh.loc[vInd, 'name']] = route_df
 
                 for ind, pa in route_df.iterrows():
-                    decisionVar.y[pa['name'], veh['name']] = 1 
-                    decisionVar.s[depot_df.loc[route_df.depot[0],'name'], route_df.loc[0,'name'], veh['name']] = 1 
+                    decisionVar.y[pa['name'], sort_veh.loc[vInd, 'name']] = 1 
+                    decisionVar.s[depot_df.loc[route_df.depot[0],'name'], route_df.loc[0,'name'], sort_veh.loc[vInd, 'name']] = 1 
                     if ind > 0:
-                        decisionVar.s[route_df.loc[ind-1,'name'], pa['name'], veh['name']] = 1 
-                decisionVar.s[route_df.loc[len(route_df)-1,'name'], depot_df.loc[route_df.depot[0],'name'], veh['name']] = 1 
+                        decisionVar.s[route_df.loc[ind-1,'name'], pa['name'], sort_veh.loc[vInd, 'name']] = 1 
+                decisionVar.s[route_df.loc[len(route_df)-1,'name'], depot_df.loc[route_df.depot[0],'name'], sort_veh.loc[vInd, 'name']] = 1 
+            whether = allPatients.label.isna().sum() == 0
+            print("Whether all patients assigned to the depot {} has a vehicle assigned: {}".format(depot_df.loc[d, 'name'], whether))
 
         else:
             veh_route_df = allPatients.sort_values(by = ['tStart']).reset_index(drop=True)
@@ -148,8 +161,7 @@ def assign_PatientDepotVehicle(max_iter=500):
                 if ind > 0:
                     decisionVar.s[veh_route_df.loc[ind-1,'name'], pa['name'], allVehicles[0]] = 1 
             decisionVar.s[veh_route_df.loc[len(veh_route_df)-1,'name'], depot_df.loc[veh_route_df.depot[0],'name'], allVehicles[0]] = 1 
-        print("Whether all patients assigned to the depot {} has a vehicle assigned: {}".format(depot_df.loc[d, 'name'], allPatients.empty))
-
+            print("Whether all patients assigned to the depot {} has a vehicle assigned: {}".format(depot_df.loc[d, 'name'], allPatients.empty))
     return routes
 
 # an auxiliary function to help calculate idle time, waiting time, overtime
@@ -289,7 +301,6 @@ for i in range(3,6):
         # m.optimize()
         # end_time = time.time()
         # p.printScen("time taken = "+str(end_time-start_time),sets.f)
-
 
         p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
         start_time = time.time()
