@@ -2,10 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 import numpy as np
 import pandas as pd
-import time
 from math import radians, cos, sin, asin, sqrt
-import benders
-# import Kmeans as p
 
 ####
 # MILP model and data instance generators
@@ -380,38 +377,3 @@ class Sets:
         
         return vehicles, patients, depots, nodes
 
-# sets = Sets("(3-10)",10)
-# para = Parameters(sets)
-
-# printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-# start_time = time.time()
-# m = benders.MasterProblem(para,sets)
-# m.optimize()
-# end_time = time.time()
-# printScen("time taken = "+str(end_time-start_time),sets.f)
-
-# printScen("Solving TSMILP Model",sets.f)
-# start_time = time.time()
-# m = TSMILP(sets,para)
-# m.optimize()
-# end_time = time.time()
-# printScen("time taken = "+str(end_time-start_time),sets.f)
-
-# for i in range(3,6):
-#     for j in [10,20,30]:
-#         sets = Sets("({}-{})".format(i,j),10)
-#         para = Parameters(sets)
-
-#         printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-#         start_time = time.time()
-#         m = benders.MasterProblem(para,sets)
-#         m.optimize()
-#         end_time = time.time()
-#         printScen("time taken = "+str(end_time-start_time),sets.f)
-
-#         printScen("Solving TSMILP Model",sets.f)
-#         start_time = time.time()
-#         m = TSMILP(sets,para)
-#         m.optimize()
-#         end_time = time.time()
-#         printScen("time taken = "+str(end_time-start_time),sets.f)

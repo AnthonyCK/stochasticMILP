@@ -5,7 +5,7 @@ import math
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-import project as p
+import MILPmodel as p
 import benders
 
 # # suppress all warnings
