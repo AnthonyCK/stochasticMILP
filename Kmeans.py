@@ -259,63 +259,63 @@ def printResult(routes, ToTCost, max_iter=500):
     print("Average Over Time: {:.2f}".format(sum(decisionVar.O.values())/len(decisionVar.O.values())),file=sets.f)
 
     
-# sets = p.Sets("({}-{})".format(3,10),10)
-# para = p.Parameters(sets)
-# decisionVar = DecisionVar()
+sets = p.Sets("({}-{})".format(5,20),10)
+para = p.Parameters(sets)
+decisionVar = DecisionVar()
 
 
-# p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-# start_time = time.time()
-# m = benders.MasterProblem(para,sets)
-# m.optimize()
-# end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time),sets.f)
+p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
+start_time = time.time()
+m = benders.MasterProblem(para,sets)
+m.optimize()
+end_time = time.time()
+p.printScen("time taken = "+str(end_time-start_time),sets.f)
 
-# p.printScen("Solving TSMILP Model",sets.f)
-# start_time = time.time()
-# m = p.TSMILP(sets,para)
-# m.optimize()
-# end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time),sets.f)
+# # p.printScen("Solving TSMILP Model",sets.f)
+# # start_time = time.time()
+# # m = p.TSMILP(sets,para)
+# # m.optimize()
+# # end_time = time.time()
+# # p.printScen("time taken = "+str(end_time-start_time),sets.f)
 
-# p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
-# start_time = time.time()
-# max_iter = 500
-# routes = assign_PatientDepotVehicle(max_iter = max_iter)
-# cal_IWO(routes)
-# ToTCost = cal_ToTCost()
-# printResult(routes, ToTCost)
-# end_time = time.time()
-# p.printScen("time taken = "+str(end_time-start_time) + 's',sets.f)
+p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
+start_time = time.time()
+max_iter = 500
+routes = assign_PatientDepotVehicle(max_iter = max_iter)
+cal_IWO(routes)
+ToTCost = cal_ToTCost()
+printResult(routes, ToTCost)
+end_time = time.time()
+p.printScen("time taken = "+str(end_time-start_time) + 's',sets.f)
 
-for i in range(3,6):
-    for j in [10,20,30]:
-        sets = p.Sets("({}-{})".format(i,j),10)
-        para = p.Parameters(sets)
-        decisionVar = DecisionVar()
-
-
-        # p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
-        # start_time = time.time()
-        # m = benders.MasterProblem(para,sets)
-        # m.optimize()
-        # end_time = time.time()
-        # p.printScen("time taken = "+str(end_time-start_time),sets.f)
-
-        # p.printScen("Solving TSMILP Model",sets.f)
-        # start_time = time.time()
-        # m = p.TSMILP(sets,para)
-        # m.optimize()
-        # end_time = time.time()
-        # p.printScen("time taken = "+str(end_time-start_time),sets.f)
+# for i in range(3,6):
+#     for j in [10,20]:
+#         sets = p.Sets("({}-{})".format(i,j),10)
+#         para = p.Parameters(sets)
+#         decisionVar = DecisionVar()
 
 
-        p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
-        start_time = time.time()
-        max_iter = 500
-        routes = assign_PatientDepotVehicle(max_iter = max_iter)
-        cal_IWO(routes)
-        ToTCost = cal_ToTCost()
-        printResult(routes, ToTCost)
-        end_time = time.time()
-        p.printScen("time taken = "+str(end_time-start_time) + 's',sets.f)
+#         # p.printScen("Solving TSMILP Model using Benders' Decomposition",sets.f)
+#         # start_time = time.time()
+#         # m = benders.MasterProblem(para,sets)
+#         # m.optimize()
+#         # end_time = time.time()
+#         # p.printScen("time taken = "+str(end_time-start_time),sets.f)
+
+#         p.printScen("Solving TSMILP Model",sets.f)
+#         start_time = time.time()
+#         m = p.TSMILP(sets,para)
+#         m.optimize()
+#         end_time = time.time()
+#         p.printScen("time taken = "+str(end_time-start_time),sets.f)
+
+
+#         # p.printScen("Solving the problem using Kmeans Heuristic",sets.f)
+#         # start_time = time.time()
+#         # max_iter = 500
+#         # routes = assign_PatientDepotVehicle(max_iter = max_iter)
+#         # cal_IWO(routes)
+#         # ToTCost = cal_ToTCost()
+#         # printResult(routes, ToTCost)
+#         # end_time = time.time()
+#         # p.printScen("time taken = "+str(end_time-start_time) + 's',sets.f)

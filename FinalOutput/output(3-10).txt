@@ -1,0 +1,77 @@
+
+*************************************************
+Solving TSMILP Model using Benders' Decomposition
+*************************************************
+
+Vehicle 1 is not used
+Vehicle 2 is not used
+Vehicle 3 is not used
+Vehicle 4 is not used
+Vehicle 5 is not used
+Vehicle 6 is not used
+Vehicle 7 is not used
+Vehicle 8 assigned to depot H3.
+Vehicle 9 is not used
+Vehicle 10 assigned to depot H5.
+
+Vehicle 8's route: H3 -> 5 (dist=13.69, t=15.00, proc=72.23) -> 7 (dist=31.05, t=170.00, proc=61.68) -> 10 (dist=19.76, t=387.00, proc=58.10) -> 9 (dist=14.95, t=564.00, proc=57.18) -> 1 (dist=10.95, t=912.00, proc=65.91) -> H3 (dist=6.68)
+Vehicle 10's route: H5 -> 3 (dist=11.71, t=65.00, proc=61.99) -> 8 (dist=36.65, t=285.00, proc=34.02) -> 6 (dist=19.48, t=621.00, proc=39.72) -> 4 (dist=3.44, t=757.00, proc=35.44) -> 2 (dist=3.97, t=825.00, proc=39.73) -> H5 (dist=20.32)
+
+Vehicle 8:
+ 	Overtime: 0.0
+	Patient 1: Idletime = 0.0, Waitingtime = 0.0
+	Patient 5: Idletime = 0.0, Waitingtime = 0.0
+	Patient 7: Idletime = 0.0, Waitingtime = 0.0
+	Patient 9: Idletime = 0.0, Waitingtime = 0.0
+	Patient 10: Idletime = 0.0, Waitingtime = 0.0
+	Depot H3: Idletime = 0.0, Waitingtime = 0.0
+Vehicle 10:
+ 	Overtime: 0.0
+	Patient 2: Idletime = 0.0, Waitingtime = 0.0
+	Patient 3: Idletime = 0.0, Waitingtime = 0.0
+	Patient 4: Idletime = 0.0, Waitingtime = 0.0
+	Patient 6: Idletime = 0.0, Waitingtime = 0.0
+	Patient 8: Idletime = 0.0, Waitingtime = 0.0
+	Depot H5: Idletime = 0.0, Waitingtime = 0.0
+
+Benders Iterations: 6
+Objective Value: 3381.2071
+Average Idle Time: 0.00
+Average Waiting Time: 0.00
+Average Over Time: 0.00
+Optimality Gap: 0.00%
+
+*******************************
+time taken = 1.5558867454528809
+*******************************
+
+
+******************************************
+Solving the problem using Kmeans Heuristic
+******************************************
+
+Vehicle 1 assigned to depot H3.
+Vehicle 2 assigned to depot H1.
+Vehicle 3 assigned to depot H5.
+Vehicle 4 is not used
+Vehicle 5 is not used
+Vehicle 6 is not used
+Vehicle 7 is not used
+Vehicle 8 is not used
+Vehicle 9 is not used
+Vehicle 10 is not used
+
+Vehicle 1's route: H3 -> patient10  -> patient6  -> patient4  -> patient2  -> patient1  -> H3 
+Vehicle 2's route: H1 -> patient5  -> patient8  -> patient9  -> H1 
+Vehicle 3's route: H5 -> patient3  -> patient7  -> H5 
+
+Kmeans Iterations: 500
+Objective Value: 13802.5082
+Average Idle Time: 122.30
+Average Waiting Time: 2.72
+Average Over Time: 1.95
+
+*********************************
+time taken = 0.09236526489257812s
+*********************************
+

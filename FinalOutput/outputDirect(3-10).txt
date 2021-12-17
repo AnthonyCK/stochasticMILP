@@ -1,0 +1,28 @@
+
+********************
+Solving TSMILP Model
+********************
+
+Vehicle 1 is not used
+Vehicle 2 is not used
+Vehicle 3 is not used
+Vehicle 4 is not used
+Vehicle 5 is not used
+Vehicle 6 is not used
+Vehicle 7 assigned to depot H1.
+Vehicle 8 is not used
+Vehicle 9 assigned to depot H3.
+Vehicle 10 is not used
+
+Vehicle 7's route: H1 -> 3 (dist=25.56, t=95.00, proc=19.63) -> 7 (dist=12.31, t=170.00, proc=23.25) -> 8 (dist=36.77, t=285.00, proc=30.66) -> 9 (dist=3.59, t=564.00, proc=80.26) -> 1 (dist=10.95, t=912.00, proc=63.19) -> H1 (dist=6.26)
+Vehicle 9's route: H3 -> 5 (dist=13.69, t=45.00, proc=50.79) -> 10 (dist=12.30, t=357.00, proc=40.28) -> 6 (dist=6.48, t=621.00, proc=22.76) -> 4 (dist=3.44, t=727.00, proc=28.82) -> 2 (dist=3.97, t=825.00, proc=52.60) -> H3 (dist=3.59)
+Objective Value: 3989.6734
+Average Idle Time: 125.42
+Average Waiting Time: 0.01
+Average Over Time: 8.10
+Optimality Gap: 47.08%
+
+******************************
+time taken = 600.9246211051941
+******************************
+

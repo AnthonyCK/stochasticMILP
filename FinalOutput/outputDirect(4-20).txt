@@ -1,0 +1,30 @@
+
+********************
+Solving TSMILP Model
+********************
+
+Vehicle 1 assigned to depot H1.
+Vehicle 2 is not used
+Vehicle 3 is not used
+Vehicle 4 is not used
+Vehicle 5 is not used
+Vehicle 6 assigned to depot H1.
+Vehicle 7 assigned to depot H3.
+Vehicle 8 is not used
+Vehicle 9 assigned to depot H3.
+Vehicle 10 is not used
+
+Vehicle 1's route: H1 -> 11 (dist=20.31, t=109.00, proc=42.70) -> 18 (dist=15.36, t=209.00, proc=37.63) -> 19 (dist=15.03, t=308.00, proc=32.91) -> 15 (dist=14.37, t=397.45, proc=27.17) -> 10 (dist=9.73, t=574.00, proc=43.00) -> H1 (dist=4.00)
+Vehicle 6's route: H1 -> 14 (dist=25.45, t=47.00, proc=23.20) -> 9 (dist=2.42, t=203.00, proc=82.03) -> 3 (dist=36.66, t=417.00, proc=49.36) -> 12 (dist=2.86, t=668.00, proc=30.89) -> 8 (dist=34.07, t=827.00, proc=34.97) -> H1 (dist=20.74)
+Vehicle 7's route: H3 -> 17 (dist=26.30, t=99.00, proc=40.71) -> 16 (dist=14.40, t=265.00, proc=26.78) -> 4 (dist=18.33, t=323.00, proc=36.58) -> 5 (dist=17.37, t=450.00, proc=29.03) -> 13 (dist=13.25, t=769.00, proc=15.06) -> H3 (dist=8.61)
+Vehicle 9's route: H3 -> 20 (dist=25.28, t=123.00, proc=58.42) -> 7 (dist=8.03, t=353.00, proc=34.86) -> 6 (dist=19.47, t=508.00, proc=52.33) -> 1 (dist=30.04, t=734.00, proc=45.75) -> 2 (dist=4.32, t=916.00, proc=27.68) -> H3 (dist=22.41)
+Objective Value: 3856.2457
+Average Idle Time: 120.84
+Average Waiting Time: 1.40
+Average Over Time: 0.00
+Optimality Gap: 57.39%
+
+******************************
+time taken = 601.2140362262726
+******************************
+

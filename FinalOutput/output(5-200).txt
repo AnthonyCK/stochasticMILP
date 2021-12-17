@@ -1,0 +1,109 @@
+
+******************************************
+Solving the problem using Kmeans Heuristic
+******************************************
+
+Vehicle 1 assigned to depot H5.
+Vehicle 2 assigned to depot H3.
+Vehicle 3 assigned to depot H2.
+Vehicle 4 assigned to depot H1.
+Vehicle 5 assigned to depot H4.
+Vehicle 6 assigned to depot H5.
+Vehicle 7 assigned to depot H3.
+Vehicle 8 assigned to depot H2.
+Vehicle 9 assigned to depot H1.
+Vehicle 10 assigned to depot H4.
+Vehicle 11 assigned to depot H5.
+Vehicle 12 assigned to depot H2.
+Vehicle 13 is not used
+Vehicle 14 assigned to depot H1.
+Vehicle 15 assigned to depot H5.
+Vehicle 16 assigned to depot H3.
+Vehicle 17 assigned to depot H2.
+Vehicle 18 is not used
+Vehicle 19 is not used
+Vehicle 20 is not used
+Vehicle 21 is not used
+Vehicle 22 is not used
+Vehicle 23 is not used
+Vehicle 24 assigned to depot H5.
+Vehicle 25 assigned to depot H4.
+Vehicle 26 assigned to depot H1.
+Vehicle 27 assigned to depot H2.
+Vehicle 28 assigned to depot H3.
+Vehicle 29 assigned to depot H2.
+Vehicle 30 assigned to depot H1.
+Vehicle 31 assigned to depot H4.
+Vehicle 32 assigned to depot H5.
+Vehicle 33 assigned to depot H3.
+Vehicle 34 assigned to depot H2.
+Vehicle 35 assigned to depot H1.
+Vehicle 36 assigned to depot H4.
+Vehicle 37 assigned to depot H5.
+Vehicle 38 assigned to depot H3.
+Vehicle 39 assigned to depot H2.
+Vehicle 40 assigned to depot H1.
+Vehicle 41 assigned to depot H4.
+Vehicle 42 assigned to depot H5.
+Vehicle 43 assigned to depot H3.
+Vehicle 44 assigned to depot H2.
+Vehicle 45 assigned to depot H1.
+Vehicle 46 assigned to depot H4.
+Vehicle 47 assigned to depot H5.
+Vehicle 48 assigned to depot H3.
+Vehicle 49 assigned to depot H3.
+Vehicle 50 is not used
+
+Vehicle 1's route: H5 -> patient3  -> patient48  -> patient16  -> patient9  -> patient4  -> H5 
+Vehicle 28's route: H3 -> patient17  -> patient61  -> patient40  -> patient26  -> patient25  -> H3 
+Vehicle 29's route: H2 -> patient35  -> patient8  -> patient39  -> patient12  -> patient165  -> H2 
+Vehicle 30's route: H1 -> patient20  -> patient7  -> patient11  -> patient14  -> patient1  -> H1 
+Vehicle 31's route: H4 -> patient13  -> patient37  -> patient45  -> patient6  -> patient2  -> H4 
+Vehicle 32's route: H5 -> patient5  -> patient125  -> patient30  -> patient22  -> patient23  -> H5 
+Vehicle 33's route: H3 -> patient24  -> patient70  -> patient41  -> patient42  -> patient32  -> H3 
+Vehicle 34's route: H2 -> patient55  -> patient19  -> patient10  -> patient44  -> patient34  -> H2 
+Vehicle 35's route: H1 -> patient43  -> patient18  -> patient15  -> patient56  -> patient29  -> H1 
+Vehicle 36's route: H4 -> patient33  -> patient38  -> patient65  -> patient78  -> patient51  -> H4 
+Vehicle 37's route: H5 -> patient21  -> patient132  -> patient60  -> patient27  -> patient31  -> H5 
+Vehicle 38's route: H3 -> patient47  -> patient71  -> patient59  -> patient77  -> patient52  -> H3 
+Vehicle 39's route: H2 -> patient84  -> patient49  -> patient67  -> patient46  -> patient36  -> H2 
+Vehicle 40's route: H1 -> patient50  -> patient101  -> patient68  -> patient75  -> patient121  -> H1 
+Vehicle 41's route: H4 -> patient85  -> patient57  -> patient82  -> patient89  -> patient53  -> H4 
+Vehicle 42's route: H5 -> patient72  -> patient167  -> patient79  -> patient28  -> patient64  -> H5 
+Vehicle 43's route: H3 -> patient62  -> patient93  -> patient86  -> patient115  -> patient81  -> H3 
+Vehicle 44's route: H2 -> patient138  -> patient92  -> patient83  -> patient58  -> patient94  -> H2 
+Vehicle 45's route: H1 -> patient54  -> patient113  -> patient74  -> patient118  -> patient129  -> H1 
+Vehicle 46's route: H4 -> patient97  -> patient116  -> patient100  -> patient127  -> patient162  -> H4 
+Vehicle 47's route: H5 -> patient95  -> patient200  -> patient102  -> patient66  -> patient80  -> H5 
+Vehicle 48's route: H3 -> patient73  -> patient87  -> patient105  -> patient112  -> patient96  -> H3 
+Vehicle 27's route: H2 -> patient150  -> patient134  -> patient148  -> patient88  -> patient155  -> H2 
+Vehicle 26's route: H1 -> patient63  -> patient198  -> patient76  -> patient130  -> patient146  -> H1 
+Vehicle 25's route: H4 -> patient111  -> patient171  -> patient170  -> patient144  -> patient176  -> H4 
+Vehicle 24's route: H5 -> patient120  -> patient108  -> patient136  -> patient69  -> patient98  -> H5 
+Vehicle 2's route: H3 -> patient131  -> patient117  -> patient106  -> patient137  -> patient99  -> H3 
+Vehicle 3's route: H2 -> patient159  -> patient149  -> patient152  -> patient90  -> patient184  -> H2 
+Vehicle 4's route: H1 -> patient161  -> patient104  -> patient122  -> patient133  -> patient185  -> H1 
+Vehicle 5's route: H4 -> patient128  -> patient126  -> patient172  -> patient199  -> patient175  -> H4 
+Vehicle 6's route: H5 -> patient139  -> patient140  -> patient145  -> patient91  -> patient110  -> H5 
+Vehicle 7's route: H3 -> patient177  -> patient174  -> patient124  -> patient166  -> patient119  -> H3 
+Vehicle 8's route: H2 -> patient182  -> patient158  -> patient188  -> patient114  -> patient103  -> H2 
+Vehicle 9's route: H1 -> patient186  -> patient142  -> patient154  -> patient156  -> patient173  -> H1 
+Vehicle 10's route: H4 -> patient153  -> H4 
+Vehicle 11's route: H5 -> patient163  -> patient151  -> patient107  -> patient109  -> patient164  -> H5 
+Vehicle 49's route: H3 -> patient197  -> patient183  -> patient179  -> patient180  -> patient147  -> H3 
+Vehicle 12's route: H2 -> patient190  -> patient123  -> patient169  -> patient141  -> patient143  -> H2 
+Vehicle 14's route: H1 -> patient178  -> patient168  -> patient181  -> patient196  -> H1 
+Vehicle 15's route: H5 -> patient194  -> patient192  -> patient157  -> patient135  -> patient160  -> H5 
+Vehicle 16's route: H3 -> patient191  -> patient189  -> patient195  -> patient187  -> H3 
+Vehicle 17's route: H2 -> patient193  -> H2 
+
+Kmeans Iterations: 500
+Objective Value: 270754.0087
+Average Idle Time: 111.34
+Average Waiting Time: 6.63
+Average Over Time: 3.50
+
+********************************
+time taken = 1.1819534301757812s
+********************************
+
