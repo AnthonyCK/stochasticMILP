@@ -99,8 +99,7 @@ def assign_PatientDepotVehicle(max_iter=500):
         allPatients = patient_df[patient_df.depot == d].reset_index(drop=True)
         allVehicles = [v for v,de in veh_depot.items() if de == d]
         if len(allVehicles) > 1:
-            for veh in allVehicles:
-                sort_veh = vehicle_df.loc[vehicle_df['name'].isin(allVehicles)].sort_values(['cap']).reset_index(drop=True) # sort from min cap to max cap
+            sort_veh = vehicle_df.loc[vehicle_df['name'].isin(allVehicles)].sort_values(['cap']).reset_index(drop=True) # sort from min cap to max cap
 
             Depotkmeans = KMeans(n_clusters=len(allVehicles), max_iter=max_iter) # do kmeans using the vehicle number
             # standardize data
@@ -108,7 +107,7 @@ def assign_PatientDepotVehicle(max_iter=500):
             Depotkmeans.fit(stand_allP)
             allPatients.loc[:,'label'] = Depotkmeans.labels_
 
-
+            ## deal with the cluster whose number of patients exceed vehicle capacity
             label_num = {l : len(allPatients[allPatients.label == l]) for l in list(np.unique(allPatients.label))} # after kmeans, each label has how many patients
             overload_veh = {ind: num - sort_veh.iloc[ind]['cap']  for ind, num in label_num.items() if num > sort_veh.iloc[ind]['cap']}
             if overload_veh != {}:
